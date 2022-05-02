@@ -37,13 +37,14 @@ class _Confhive:
 
     def set_key(self, config_key: str, value: Any) -> None:
         if self.__wprot:
-            raise ConfigPermissionError(f"Config hive {self.__hivename} is write protected")
-        
+            raise ConfigPermissionError(
+                f"Config hive {self.__hivename} is write protected")
+
         self.__hive["keys"][config_key] = value
         fd = open(self.__hivefile, "w")
         j.dump(self.__hive, fd)
         fd.close()
-    
+
 
 user = _Confhive("config/user.json")
 const = _Confhive("config/const.json")
