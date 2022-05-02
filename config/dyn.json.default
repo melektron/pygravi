@@ -2,6 +2,6 @@
     "hivename": "dyn",
     "writeprotect": false,
     "keys": {
-        "server_ip": "127.0.0.1"
+        "G": 1
     }
 }

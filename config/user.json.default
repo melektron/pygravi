@@ -2,6 +2,16 @@
     "hivename": "user",
     "writeprotect": false,
     "keys": {
-        "name":"username"
+        "objects": [
+            {
+                "name": "object1",
+                "radius": 56,
+                "mass": 897,
+                "pos": {
+                    "x": 0,
+                    "y": 0
+                }
+            }
+        ]
     }
 }

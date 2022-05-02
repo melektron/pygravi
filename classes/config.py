@@ -44,6 +44,7 @@ class _Confhive:
         fd = open(self.__hivefile, "w")
         j.dump(self.__hive, fd)
         fd.close()
+        setattr(config_key, value)
 
 
 user = _Confhive("config/user.json")
