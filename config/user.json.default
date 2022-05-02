@@ -1,0 +1,7 @@
+{
+    "hivename": "user",
+    "writeprotect": false,
+    "keys": {
+        "name":"username"
+    }
+}

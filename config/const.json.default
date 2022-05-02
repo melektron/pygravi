@@ -1,0 +1,32 @@
+{
+    "hivename": "const",
+    "writeprotect": true,
+    "keys": {
+        "PI": 3.141592653589793238462643383279502488,
+        "g": 9.81,
+        "T_MULT": 5,
+        "WINDOW_SIZE": [
+            1920,
+            1080
+        ],
+
+        "BULLET_COOLDOWN": 0.1,
+        "ROCKET_COOLDOWN": 20,
+        "HOMING_ROCKET_COOLDOWN": 20,
+        "SNIPER_COOLDOWN": 8,
+
+        "BULLET_DAMAGE": 1,
+        "ROCKET_DAMAGE": 100,
+        "HOMING_ROCKET_DAMAGE": 50,
+        "SNIPER_DAMAGE": 9,
+
+        "BULLET_SPEED": 200,
+        "ROCKET_SPEED": 100,
+        "HOMING_ROCKET_SPEED": 50,
+        "SNIPER_SPEED": 600,
+
+        "MAX_SPEED": 50,
+        "JUMP_SPEED": 80,
+        "MAX_HP": 10
+    }
+}

@@ -1,4 +1,8 @@
 
+# config files should not be saved, only defaults
+/config/const.json
+/config/dyn.json
+/config/user.json
 
 # ignore code workspaces
 *.code-workspace
