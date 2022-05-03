@@ -14,11 +14,7 @@ import tkinter as tk
 import classes.render_frame
 import classes.config_frame
 
-
-# to reslove blurry UI set windows dpi awareness. This will only work
-# on windows
-from ctypes import windll
-windll.shcore.SetProcessDpiAwareness(1)
+import classes.antiblurr
 
 
 
