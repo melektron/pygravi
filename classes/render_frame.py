@@ -4,7 +4,9 @@ Author
 
 import tkinter.ttk as ttk
 import tkinter as tk
+from concurrent.futures import ThreadPoolExecutor as PoolExecutor
 from classes.vector import Vector2D
+from classes.sim_space import SimObject
 
 
 class RenderFrame(ttk.Frame):
@@ -43,7 +45,8 @@ class RenderFrame(ttk.Frame):
                 self.testoval,
                 self.testvector.x - self.ovrx,
                 self.testvector.y - self.ovry)
-            self.render_canvas.coords(self.testarrow, 0, 0, self.testvector.x, self.testvector.y)
+            self.render_canvas.coords(
+                self.testarrow, 0, 0, self.testvector.x, self.testvector.y)
 
     def canvas_mouse_b1(self, event):
         self.moveactive = not self.moveactive   # toggle
@@ -55,4 +58,15 @@ class RenderFrame(ttk.Frame):
                 self.testoval,
                 self.testvector.x - self.ovrx,
                 self.testvector.y - self.ovry)
-            self.render_canvas.coords(self.testarrow, 0, 0, self.testvector.x, self.testvector.y)
+            self.render_canvas.coords(
+                self.testarrow, 0, 0, self.testvector.x, self.testvector.y)
+
+    def render_object(self, obj: SimObject) -> None:
+        if obj.canvas_id is ...:
+            # if object has not been drawn jet, create new object
+            obj.canvas_id = self.render_canvas.create_oval(
+                obj.pos.x - obj.radius, obj.pos.y - obj.radius, obj.pos.x + obj.radius, obj.pos.y + obj.radius)
+        else:
+            self.render_canvas.coords(
+                obj.canvas_id,
+                obj.pos.x - obj.radius, obj.pos.y - obj.radius, obj.pos.x + obj.radius, obj.pos.y + obj.radius)

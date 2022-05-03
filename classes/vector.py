@@ -21,6 +21,10 @@ class Vector2D:
     def __init__(self, x: float, y: float):
         self._valx, self._valy = x, y
 
+    @classmethod
+    def from_cart(cls, values: tuple | list) -> "Vector2D":
+        return Vector2D(values[0], values[1])
+
     # properties for cartesian values
     @property
     def x(self) -> float:
