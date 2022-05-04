@@ -77,47 +77,53 @@ class Vector2D:
     
     def __str__(self):
         # Human-readable string representation of the vector
-        return '({:g};{:g})'.format(self.x, self.y)
+        return '({:g};{:g})'.format(self._valx, self._valy)
 
     def __repr__(self):
         # Unambiguous string representation of the vector
-        return repr((self.x, self.y))
+        return repr((self._valx, self._valy))
 
     def dot(self, other):
         # The scalar (dot) product of self and other. Both must be vectors
         if not isinstance(other, Vector2D):
             raise TypeError("Can only dot-multiply Vector2D by Vector2D")
-        return self.x * other.x + self.y * other.y
+        return self._valx * other._valx + self._valy * other._valy
     
     # Alias the __matmul__ method to enable matrix multiplication with "a @ b" syntax
     __matmul__ = dot
 
-    def __sub__(self, other):
+    def __sub__(self, other: "Vector2D"):
         # Vector subtraction
-        return Vector2D(self.x - other.x, self.y - other.y)
+        return Vector2D(self._valx - other._valx, self._valy - other._valy)
 
-    def __add__(self, other):
+    def __add__(self, other: "Vector2D"):
         # Vector addition
-        return Vector2D(self.x + other.x, self.y + other.y)
+        return Vector2D(self._valx + other._valx, self._valy + other._valy)
 
     def __mul__(self, scalar):
         # Multiplication of a vector by a scalar (single factor)
 
         if isinstance(scalar, int) or isinstance(scalar, float):
-            return Vector2D(self.x*scalar, self.y*scalar)
+            return Vector2D(self._valx*scalar, self._valy*scalar)
         raise NotImplementedError('Can only multiply Vector2D by a number')
 
     def __rmul__(self, scalar):
         # Reflected multiplication so scalar * vector also works
         return self.__mul__(scalar)
+    
+    def __pow__(self, power):
+        # power operator (**)
+
+        if isinstance(power, int) or isinstance(power, float):
+            return Vector2D(self._valx**power, self._valy**power)
 
     def __neg__(self):
         # Negation of the vector (invert through origin)
-        return Vector2D(-self.x, -self.y)
+        return Vector2D(-self._valx, -self._valy)
 
     def __truediv__(self, scalar):
         # True division of the vector by a scalar
-        return Vector2D(self.x / scalar, self.y / scalar)
+        return Vector2D(self._valx / scalar, self._valy / scalar)
 
     def __mod__(self, scalar):
         # One way to implement modulus operation: for each component

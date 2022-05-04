@@ -5,11 +5,11 @@
         "objects": [
             {
                 "name": "object1",
-                "radius": 56,
+                "radius": 25,
                 "mass": 897,
-                "pos": [0, 0],
+                "pos": [500, 0],
                 "vel": [0, 0],
-                "force": [0, 0]
+                "force": [100, 50]
             }
         ]
     }

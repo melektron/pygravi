@@ -4,9 +4,9 @@ Author
 
 import tkinter.ttk as ttk
 import tkinter as tk
-from concurrent.futures import ThreadPoolExecutor as PoolExecutor
 from classes.vector import Vector2D
 from classes.sim_space import SimObject
+import classes.config as config
 
 
 class RenderFrame(ttk.Frame):
@@ -62,11 +62,29 @@ class RenderFrame(ttk.Frame):
                 self.testarrow, 0, 0, self.testvector.x, self.testvector.y)
 
     def render_object(self, obj: SimObject) -> None:
-        if obj.canvas_id is ...:
+        x0: float = obj.pos.x - obj.radius
+        y0: float = obj.pos.y - obj.radius
+        x1: float = obj.pos.x + obj.radius
+        y1: float = obj.pos.y + obj.radius
+
+        if obj.ca_circle_id is ...:
             # if object has not been drawn jet, create new object
-            obj.canvas_id = self.render_canvas.create_oval(
-                obj.pos.x - obj.radius, obj.pos.y - obj.radius, obj.pos.x + obj.radius, obj.pos.y + obj.radius)
+            obj.ca_circle_id = self.render_canvas.create_oval(x0, y0, x1, y1)
         else:
             self.render_canvas.coords(
-                obj.canvas_id,
-                obj.pos.x - obj.radius, obj.pos.y - obj.radius, obj.pos.x + obj.radius, obj.pos.y + obj.radius)
+                obj.ca_circle_id,
+                x0, y0, x1, y1)
+
+        if config.dyn.show_fvector:
+            fx0: float = obj.pos.x
+            fy0: float = obj.pos.y
+            fx1: float = fx0 + obj.force.x
+            fy1: float = fy0 + obj.force.y
+
+            if obj.ca_fvector_id is ...:
+                obj.ca_fvector_id = self.render_canvas.create_line(
+                    fx0, fy0, fx1, fy1, arrow=tk.LAST)
+            else:
+                self.render_canvas.coords(
+                    obj.ca_fvector_id,
+                    fx0, fy0, fx1, fy1)

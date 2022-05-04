@@ -3,6 +3,9 @@
     "writeprotect": false,
     "keys": {
         "G": 1,
-        "framedelay": 200
+        "vframedelay": 10,
+        "sframedelay": 1,
+
+        "show_fvector": true
     }
 }

@@ -35,10 +35,10 @@ class Window(tk.Tk):
         self.render_frame.grid(row=1, column=1, sticky="NSEW", padx=5, pady=5)
 
         self.config_frame = classes.config_frame.ConfigFrame(self)
-        self.config_frame.config(width=100)
+        self.config_frame.config(width=400)
         self.config_frame.grid(row=1, column=2, sticky="NSEW", padx=5, pady=5)
 
-        self.after(config.dyn.framedelay, self.render_objects)
+        self.after(config.dyn.vframedelay, self.render_objects)
 
     def render_objects(self) -> None:
         # Render Start
@@ -46,12 +46,12 @@ class Window(tk.Tk):
             self.render_frame.render_object(obj)
         # Render End
         # recall render after x time
-        self.after(config.dyn.framedelay, self.render_objects)
+        self.after(config.dyn.vframedelay, self.render_objects)
 
 
 if __name__ == "__main__":
     sim_space.load_objects(config.user.objects)
-    
-    print(sim_space.objects)
+    sim_space.run_simulation()
     mywindow = Window()
     mywindow.mainloop()
+    sim_space.stop_simulation()
