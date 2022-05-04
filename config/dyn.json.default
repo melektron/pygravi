@@ -2,7 +2,8 @@
     "hivename": "dyn",
     "writeprotect": false,
     "keys": {
-        "G": 1,
+        "G": 0.000000000066743,
+        "deltat": 1,
         "vframedelay": 10,
         "sframedelay": 1,
 
