@@ -5,8 +5,9 @@
         "G": 0.000000000066743,
         "deltat": 1,
         "vframedelay": 10,
-        "sframedelay": 1,
+        "__sframedelay_comment": "sframedelay is in us",
+        "sframedelay": 1000,
 
-        "show_fvector": true
+        "show_fvector": false
     }
 }

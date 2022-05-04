@@ -8,12 +8,14 @@ The space that the simulation will take place int
 
 """
 
+from copy import copy
 from typing import TypedDict
 import time
 from concurrent.futures import ThreadPoolExecutor as PoolExecutor
 import classes.config as config
 from classes.vector import Vector2D
 from traceback import print_exc
+import external.GS_timing as acctime    # more accurate timing
 
 
 # Class that defines a physical object in the simulation
@@ -105,7 +107,7 @@ class _SimSpace:
             while not self.SIGTERM:
                 if self.running:
                     self.do_sim_frame()
-                    time.sleep(config.dyn.sframedelay / 1000)
+                    acctime.delayMicroseconds(config.dyn.sframedelay)
                 else:
                     time.sleep(.1)
         except Exception:
@@ -114,18 +116,28 @@ class _SimSpace:
     def do_sim_frame(self) -> None:
         # function that runns the calculations for each simulation frame
         # turn one object
-        self.objects[-1].pos.phi = self.objects[-1].pos.phi + 0.01
-
-        for obj in self.objects:
-            sforce: Vector2D = (obj.force * obj.mass * (config.dyn.deltat**2)) / 2
-            svel: Vector2D = obj.vel * config.dyn.deltat
-
+        # self.objects[-1].pos.phi = self.objects[-1].pos.phi + 0.01
+        
         # calculate the force vectors
         for obj in self.objects:
             obj.force.cart = (0, 0)
             for obj2 in self.objects:
                 obj.force = obj.force + obj.gforce(obj2)
                 #print("Object: ", obj.name, "\tPos: ", obj.pos, "\tOhter: ", obj2.pos, "\tTemp Force: ", obj.force)
+        
+        # calculate velocity based on the current force
+        for obj in self.objects:
+            # acceleration caused by the force on the object
+            accel: Vector2D = obj.force / obj.mass
+            # add the velocity caused by the acceleration in the configured time step to the object velocity
+            obj.vel += accel * config.dyn.deltat
+        
+        # calculate the movement based on the current velocity
+        for obj in self.objects:
+            obj.pos += obj.vel * config.dyn.deltat
+
+
+        
 
     def run_simulation(self) -> None:
         self.running = True
