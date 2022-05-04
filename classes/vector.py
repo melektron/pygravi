@@ -117,6 +117,14 @@ class Vector2D:
         if isinstance(power, int) or isinstance(power, float):
             return Vector2D(self._valx**power, self._valy**power)
 
+    def __iadd__(self, other: "Vector2D"):
+        self._valx += other._valx
+        self._valy += other._valy
+    
+    def __isub__(self, other: "Vector2D"):
+        self._valx -= other._valx
+        self._valy -= other._valy
+
     def __neg__(self):
         # Negation of the vector (invert through origin)
         return Vector2D(-self._valx, -self._valy)
