@@ -5,7 +5,7 @@ Author
 import tkinter.ttk as ttk
 import tkinter as tk
 from classes.vector import Vector2D
-from classes.sim_space import SimObject
+from classes.sim_object import SimObject
 import classes.config as config
 
 
