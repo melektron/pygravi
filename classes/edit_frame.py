@@ -8,3 +8,10 @@ The GUI frame on the left of the window for adding/remoing/selecting simulation 
 
 """
 
+import tkinter as tk
+import tkinter.ttk as ttk
+ 
+class EditFrame(ttk.Frame):
+    def __init__(self, master, *args, **kwargs):
+        self.master = master
+        super().__init__(master, borderwidth=2, relief=tk.GROOVE, *args, *kwargs)

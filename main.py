@@ -12,10 +12,10 @@ Main file for gravity sim
 import tkinter.ttk as ttk
 import tkinter as tk
 import classes.config as config
+from classes.sim_space import sim_space
 import classes.render_frame
 import classes.config_frame
-from classes.sim_space import sim_space
-
+import classes.edit_frame
 import classes.antiblurr
 
 
@@ -29,6 +29,9 @@ class Window(tk.Tk):
         self.columnconfigure(1, weight=3)
         self.columnconfigure(2, weight=0)
         self.rowconfigure(1, weight=1)
+
+        self.edit_frame = classes.edit_frame.EditFrame(self)
+
 
         self.render_frame = classes.render_frame.RenderFrame(self)
         self.render_frame.config(width=20)

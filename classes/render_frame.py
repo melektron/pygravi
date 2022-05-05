@@ -10,9 +10,9 @@ import classes.config as config
 
 
 class RenderFrame(ttk.Frame):
-    def __init__(self, master):
+    def __init__(self, master, *args, **kwargs):
         self.master = master
-        super().__init__(master, borderwidth=2, relief=tk.GROOVE)
+        super().__init__(master, borderwidth=2, relief=tk.GROOVE, *args, **kwargs)
 
         self.rowconfigure(0, weight=1)
         self.columnconfigure(0, weight=1)
