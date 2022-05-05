@@ -12,6 +12,6 @@ import tkinter as tk
 import tkinter.ttk as ttk
  
 class EditFrame(ttk.Frame):
-    def __init__(self, master, *args, **kwargs):
+    def __init__(self, master, **kwargs):
         self.master = master
-        super().__init__(master, borderwidth=2, relief=tk.GROOVE, *args, *kwargs)
+        super().__init__(master, borderwidth=2, relief=tk.GROOVE, **kwargs)

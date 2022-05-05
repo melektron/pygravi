@@ -27,19 +27,17 @@ class Window(tk.Tk):
         super().__init__(*args, **kwargs)
 
         self.columnconfigure(1, weight=3)
-        self.columnconfigure(2, weight=0)
+        #self.columnconfigure(2, weight=0)
         self.rowconfigure(1, weight=1)
 
-        self.edit_frame = classes.edit_frame.EditFrame(self)
+        self.edit_frame = classes.edit_frame.EditFrame(self, width=400)
+        self.edit_frame.grid(row=1, column=0, padx=5, pady=5)
 
-
-        self.render_frame = classes.render_frame.RenderFrame(self)
-        self.render_frame.config(width=20)
+        self.render_frame = classes.render_frame.RenderFrame(self, width=300)
         self.render_frame.grid(row=1, column=1, sticky="NSEW", padx=5, pady=5)
 
-        self.config_frame = classes.config_frame.ConfigFrame(self)
-        self.config_frame.config(width=400)
-        self.config_frame.grid(row=1, column=2, sticky="NSEW", padx=5, pady=5)
+        self.config_frame = classes.config_frame.ConfigFrame(self, width=400)
+        self.config_frame.grid(row=1, column=2, padx=5, pady=5)
 
         self.after(config.dyn.vframedelay, self.render_objects)
 

@@ -7,9 +7,9 @@ import tkinter as tk
 import tkinter.ttk as ttk
  
 class ConfigFrame(ttk.Frame):
-    def __init__(self, master):
+    def __init__(self, master, **kwargs):
         self.master = master
-        super().__init__(master, borderwidth=2, relief=tk.GROOVE)
+        super().__init__(master, borderwidth=2, relief=tk.GROOVE, **kwargs)
         
         
  
