@@ -6,7 +6,10 @@
         "deltat": 1,
         "vframedelay": 10,
         "__sframedelay_comment": "sframedelay is in us",
-        "sframedelay": 1000,
+        "sframedelay": 100,
+
+        "do_gravity": true,
+        "do_collision": true,
 
         "show_fvector": false
     }
