@@ -1,0 +1,10 @@
+Rechts oben 
+
+Allgemein 
+Gravitation Haken Ein/Aus 
+Kolision Haken Ein/Aus 
+Ideal/Real 
+
+Bei Schieberegler Entry für min und max 
+Schieberegler Gravitationskonstante 
+Schieberegler Energieverlust (beim Zusammenstoß) 
