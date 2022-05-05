@@ -70,26 +70,50 @@ class _SimSpace:
         
     def do_sim_frame(self) -> None:
         # function that runns the calculations for each simulation frame
-        # turn one object
-        # self.objects[-1].pos.phi = self.objects[-1].pos.phi + 0.01
+        if config.dyn.do_gravity:
+            # calculate the force vectors
+            for obj in self.objects:
+                obj.force.cart = (0, 0)
+                for obj2 in self.objects:
+                    obj.force = obj.force + obj.gforce(obj2)
+                    #print("Object: ", obj.name, "\tPos: ", obj.pos, "\tOhter: ", obj2.pos, "\tTemp Force: ", obj.force)
+
+            # calculate velocity based on the current force
+            for obj in self.objects:
+                # acceleration caused by the force on the object
+                accel: Vector2D = obj.force / obj.mass
+                # add the velocity caused by the acceleration in the configured time step to the object velocity
+                obj.vel += accel * config.dyn.deltat
         
-        # calculate the force vectors
-        for obj in self.objects:
-            obj.force.cart = (0, 0)
-            for obj2 in self.objects:
-                obj.force = obj.force + obj.gforce(obj2)
-                #print("Object: ", obj.name, "\tPos: ", obj.pos, "\tOhter: ", obj2.pos, "\tTemp Force: ", obj.force)
-        
-        # calculate velocity based on the current force
-        for obj in self.objects:
-            # acceleration caused by the force on the object
-            accel: Vector2D = obj.force / obj.mass
-            # add the velocity caused by the acceleration in the configured time step to the object velocity
-            obj.vel += accel * config.dyn.deltat
+        # ?????
+        if config.dyn.do_collision:
+            # check for collisions
+            for obj in self.objects:
+                for obj2 in self.objects:
+                    # don't check collision with self
+                    if obj is obj2:
+                        continue
+                    # if collison
+                    if obj.pos.distance_to(obj2.pos) <= obj.radius + obj2.radius:
+                        # get direction vector to other object for calculating collision angle
+                        direction: Vector2D = obj2.pos - obj.pos
+                        
+                        # calculate main object
+                        # get the angle delta of the velocity to the collision angle
+                        dphi = direction.phi - obj.vel.phi
+                        # mirror the velocity across the collison angle line and invert it
+
+
+
+                        # calculate influencing object (obj2)
         
         # calculate the movement based on the current velocity
         for obj in self.objects:
             obj.pos += obj.vel * config.dyn.deltat
+
+       
+
+
 
 
         
