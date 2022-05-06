@@ -97,9 +97,10 @@ class UpperFrame(ttk.Frame):
         self.reset_button=ttk.Button(self.start_frame, text="RESET")
         self.reset_button.grid(row=0, column=2, sticky="WE", padx=10, ipady=5)
 
-        #Place between Upper and Lower Frame
+        #space between Upper and Lower Frame
         self.place_holder_label=ttk.Label(self)
         self.place_holder_label.grid(row=8, column=0)
+
 
     
     #Collision Losses Slider 

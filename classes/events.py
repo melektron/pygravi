@@ -9,16 +9,16 @@ events class and instances that can be used to send signals throughout the progr
 """
 
 class _Event:
-    subs: list      # list of subscribed functions
+    _subs: list      # list of subscribed functions
     def __init__(self):
-        subs = []
+        self._subs = []
     
     def trigger(self, value=0):
-        for sub in self.subs:
+        for sub in self._subs:
             sub(value)
     
-    def subscribe(self, callback: function):
-        self.subs.append(callback)
+    def subscribe(self, callback):
+        self._subs.append(callback)
     
 # predefined events
 selection_change: _Event = _Event()

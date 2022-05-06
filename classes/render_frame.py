@@ -8,7 +8,7 @@ import tkinter as tk
 from classes.vector import Vector2D
 from classes.sim_object import SimObject
 from classes.sim_space import sim_space
-from classes.config_frame import config_frame
+import classes.events as events
 import classes.config as config
 
 
@@ -150,6 +150,7 @@ class RenderFrame(ttk.Frame):
         
         if config.dyn.tool == "select":
             sim_space.selected_object = clicked_obj
+            events.selection_change.trigger()
         
 
     def canvas_mouse_scroll(self, event):

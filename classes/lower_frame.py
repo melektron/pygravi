@@ -7,6 +7,7 @@ import tkinter as tk
 import tkinter.ttk as ttk
 from classes.custom_slider import CustomSlider
 from classes.sim_space import sim_space
+import classes.events as events
 
 High_Value=True
 Low_Value=False
@@ -41,7 +42,7 @@ class LowerFrame(ttk.Frame):
 
         #Checkbox ON/OFF
         self.checkbox_object_state=tk.IntVar(value=High_Value)
-        self.checkbox_object=ttk.Checkbutton(self,variable=self.checkbox_object_state, onvalue=High_Value, offvalue=Low_Value, text="Object ON/OFF") #command and variable
+        self.checkbox_object=ttk.Checkbutton(self,variable=self.checkbox_object_state, command=self._checkbox_on_off_change, onvalue=High_Value, offvalue=Low_Value, text="Object ON/OFF") #command and variable
         self.checkbox_object.grid(row=2, column=0, sticky="W", pady=10, padx=10)
 
         #Mass
@@ -51,29 +52,34 @@ class LowerFrame(ttk.Frame):
         self.mass_slider.grid(row=3, column=0, sticky="WE", pady=10, padx=10)
 
         #Diameter
-        self.diameter_slider=CustomSlider(self, text="Diameter", from_=0, to=1, variable=self.diameter_variable, unit="m")
+        self.diameter_slider=CustomSlider(self, text="Radius", from_=0, to=1, variable=self.diameter_variable, unit="m")
         self.diameter_variable.trace("w", self._slider_diameter_change)
         self.columnconfigure(0, weight=1)
         self.diameter_slider.grid(row=4, column=0, sticky="WE", pady=10, padx=10)
 
+        # subscribe to selection change event to update all values according to the new selection
+        events.selection_change.subscribe(self.update)
+
     #Entry Name
-    def _object_name_entry_change(self): 
+    def _object_name_entry_change(self, event=...): 
         sim_space.selected_object.name=self.object_name_entry_variable.get()
 
     #Checkbox ON/OFF 
-    def _Checkbox_on_off_change(self): 
+    def _checkbox_on_off_change(self): 
         sim_space.selected_object.active=self.checkbox_object_state.get()
+        print("checkbox: ", sim_space.selected_object.active)
 
-    #Checkbox Mass
+    #Slider Mass
     def _slider_mass_change(self, a,b,c): 
         sim_space.selected_object.mass=self.mass_variable.get()
 
-    #Checkbox Diameter
+    #Slider Radius
     def _slider_diameter_change(self, a,b,c): 
-        sim_space.selected_object.diameter=self.diameter_variable.get()
+        sim_space.selected_object.radius=self.diameter_variable.get()
 
-    #Werte auslesen
-    def update(self): 
+    #Werte aus auswahl auslesen
+    def update(self, event_data): 
+        self.object_name_entry_variable.set(sim_space.selected_object.name)
         self.checkbox_object_state.set(sim_space.selected_object.active)
         self.mass_variable.set(sim_space.selected_object.mass)
-        self.diameter_variable.set(sim_space.selected_object.diameter)
+        self.diameter_variable.set(sim_space.selected_object.radius)
