@@ -63,7 +63,7 @@ class _SimSpace:
             while not self.SIGTERM:
                 if self.running:
                     self.do_sim_frame()
-                    acctime.delayMicroseconds(config.dyn.sframedelay)
+                    acctime.delayMicroseconds(config.dyn.sim_framedelay)
                 else:
                     time.sleep(.1)
         except Exception:
@@ -86,7 +86,7 @@ class _SimSpace:
                 # acceleration caused by the force on the object
                 accel: Vector2D = obj.force / obj.mass
                 # add the velocity caused by the acceleration in the configured time step to the object velocity
-                obj.vel += accel * config.dyn.deltat
+                obj.vel += accel * config.dyn.sim_deltat
 
         if config.dyn.do_collision:
             done_objects = []   # list of all objects that have been calculated already
@@ -156,7 +156,7 @@ class _SimSpace:
         # calculate the movement based on the current velocity
         for obj in self.objects:
             if not obj.active: continue
-            obj.pos += obj.vel * config.dyn.deltat
+            obj.pos += obj.vel * config.dyn.sim_deltat
 
     def run_simulation(self) -> None:
         self.running = True
