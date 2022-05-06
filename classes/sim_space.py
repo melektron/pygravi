@@ -33,6 +33,7 @@ class _SimSpace:
 
     # list of all objects
     objects: list[SimObject] = ...
+    selected_object: SimObject
 
     # executer pool
     exec_pool: PoolExecutor = ...
@@ -43,6 +44,7 @@ class _SimSpace:
 
     def __init__(self):
         self.objects = []
+        self.selected_object: SimObject = ...
 
         # initialize the thread pool executor
         self.exec_pool = PoolExecutor(max_workers=10)
