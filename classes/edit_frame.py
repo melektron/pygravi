@@ -10,6 +10,8 @@ The GUI frame on the left of the window for adding/remoing/selecting simulation 
 
 import tkinter as tk
 import tkinter.ttk as ttk
+
+from pyparsing import col
 import classes.config as config
 
 
@@ -73,3 +75,8 @@ class EditFrame(ttk.Frame):
     # trace callback for self.current_tool_variable
     def tool_change(self, a, b, c):
         config.dyn.tool = self.current_tool_variable.get()
+        
+        self.object_list=ttk.Treeview(self, columns=columns, show="tree")
+
+        columns=("Color", "Name")
+
