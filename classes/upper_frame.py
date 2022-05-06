@@ -8,15 +8,15 @@ import tkinter.ttk as ttk
 from classes.custom_slider import CustomSlider
 import classes.config as config 
 
-High_Value=1
-Low_Value=0
+High_Value=True
+Low_Value=False
 
 class UpperFrame(ttk.Frame): 
     def __init__(self, master): 
         super().__init__(master)
         self.gravitation_variable=tk.DoubleVar()
-        self.energy_variable=tk.DoubleVar()
-        self.simulation_speed_variable=tk.DoubleVar()
+        self.collision_losses_variable=tk.DoubleVar()
+        self.simulation_frame_delay_variable=tk.DoubleVar()
         self.time_step_variable=tk.DoubleVar()
 
 
@@ -34,52 +34,52 @@ class UpperFrame(ttk.Frame):
         self.checkbox_frame.grid(row=1, column=0, sticky="WE", padx=10, pady=10)
 
         #Checkbox Gravitation 
-        self.checkbox_gravitation_state=tk.IntVar(value=High_Value)
-        self.checkbox_gravitation=ttk.Checkbutton(self.checkbox_frame,variable=self.checkbox_gravitation_state, onvalue=High_Value, offvalue=Low_Value, text="Gravitation", command=self.checkbox_gravitation_change) #command and variable
+        self.checkbox_gravitation_state=tk.IntVar(value=config.dyn.do_gravity)
+        self.checkbox_gravitation=ttk.Checkbutton(self.checkbox_frame,variable=self.checkbox_gravitation_state, onvalue=High_Value, offvalue=Low_Value, text="Gravitation", command=self.checkbox_do_gravity_change) 
         self.checkbox_gravitation.grid(row=0, column=0, sticky="W")
 
         #Checkbox Collision 
-        self.checkbox_collision_state=tk.IntVar(value=High_Value)
-        self.checkbox_collision=ttk.Checkbutton(self.checkbox_frame,variable=self.checkbox_collision_state, onvalue=High_Value, offvalue=Low_Value, text="Collision") #command and variable
+        self.checkbox_collision_state=tk.IntVar(value=config.dyn.do_collision)
+        self.checkbox_collision=ttk.Checkbutton(self.checkbox_frame,variable=self.checkbox_collision_state, onvalue=High_Value, offvalue=Low_Value, text="Collision", command=self.checkbox_do_collision_change) 
         self.checkbox_collision.grid(row=1, column=0, sticky="W")
 
         #Checkbox Ideal System 
-        self.checkbox_ideal_state=tk.IntVar(value=High_Value)
-        self.checkbox_ideal=ttk.Checkbutton(self.checkbox_frame,variable=self.checkbox_ideal_state, onvalue=High_Value, offvalue=Low_Value, text="Ideal System") #command and variable
+        self.checkbox_ideal_state=tk.IntVar(value=config.dyn.do_ideal)
+        self.checkbox_ideal=ttk.Checkbutton(self.checkbox_frame,variable=self.checkbox_ideal_state, onvalue=High_Value, offvalue=Low_Value, text="Ideal System", command=self.checkbox_do_ideal_change) 
         self.checkbox_ideal.grid(row=2, column=0, sticky="W")
 
-        #Energy
-        self.energy_slider=CustomSlider(self, text="Collision Losses", from_=0.03, to=1, variable=self.energy_variable, unit="J")
-        self.energy_variable.trace("w", lambda a,b,c: print(self.energy_variable.get()))
-        self.energy_slider.grid(row=2, column=0, sticky="WE", padx=10, pady=10)
+        #Collision Losse
+        self.collision_losses_slider=CustomSlider(self, text="Collision Losses", from_=0, to=1, variable=self.collision_losses_variable, unit="J")
+        self.collision_losses_variable.trace("w", self.slider_collosion_losses_change)
+        self.collision_losses_slider.grid(row=2, column=0, sticky="WE", padx=10, pady=10)
 
-        #Walls 
-        self.walls=tk.IntVar()
-        self.walls.set(0)
+        #Vector Frame (force,velocity)
+        self.vector_checkbox_frame=ttk.Frame(self)
+        self.vector_checkbox_frame.grid(row=2, column=0, sticky="WE", padx=10, pady=10)
 
-        self.walls_frame=ttk.Frame(self)
-        self.walls_frame.grid(row=3, column=0, sticky="WE", padx=10, pady=10)
+        #Checkbox force vector 
+        self.checkbox_force_state=tk.IntVar(value=config.dyn.show_force_vector)
+        self.checkbox_force=ttk.Checkbutton(self.checkbox_frame,variable=self.checkbox_force_state, onvalue=High_Value, offvalue=Low_Value, text="Force", command=self.checkbox_do_force_vector_change) 
+        self.checkbox_force.grid(row=0, column=0, sticky="W")
 
-        self.walls_collide=ttk.Radiobutton(self.walls_frame, text="Walls collide", variable=self.walls, value=0)
-        self.walls_collide.grid(row=0, column=0, sticky="W")
-        self.walls_teleport=ttk.Radiobutton(self.walls_frame, text="Walls teleport", variable=self.walls, value=1)
-        self.walls_teleport.grid(row=1, column=0, sticky="W")
-        self.no_walls=ttk.Radiobutton(self.walls_frame, text="No walls", variable=self.walls, value=2)
-        self.no_walls.grid(row=2, column=0, sticky="W")
+        #Checkbox velocity vector
+        self.checkbox_velocity_state=tk.IntVar(value=config.dyn.show_velocity_vector)
+        self.checkbox_velocity=ttk.Checkbutton(self.checkbox_frame,variable=self.checkbox_collision_state, onvalue=High_Value, offvalue=Low_Value, text="Velocity", command=self.checkbox_do_velocity_vector_change) 
+        self.checkbox_velocity.grid(row=1, column=0, sticky="W")
 
         #Gravitation
-        self.gravitation_slider=CustomSlider(self, text="Gravitation", from_=0.03, to=1, variable=self.gravitation_variable)
-        self.gravitation_variable.trace("w", lambda a,b,c: print(self.gravitation_variable.get()))
+        self.gravitation_slider=CustomSlider(self, text="Gravitation", from_=0, to=1, variable=self.gravitation_variable)
+        self.gravitation_variable.trace("w", self.slider_G_change)
         self.gravitation_slider.grid(row=4, column=0, sticky="WE", padx=10, pady=10)
 
-        #Simulation Speed
-        self.simulation_speed_slider=CustomSlider(self, text="Simulation Speed", from_=0.03, to=1, variable=self.simulation_speed_variable)
-        self.simulation_speed_variable.trace("w", lambda a,b,c: print(self.simulation_speed_variable.get()))
-        self.simulation_speed_slider.grid(row=5, column=0, sticky="WE", padx=10, pady=10)
+        #Simulation Frame Delay
+        self.simulation_frame_delay_slider=CustomSlider(self, text="Simulation Frame Delay", from_=0.03, to=1, variable=self.simulation_frame_delay_variable, unit="us")
+        self.simulation_frame_delay_variable.trace("w", self.slider_sframedelay_change)
+        self.simulation_frame_delay_slider.grid(row=5, column=0, sticky="WE", padx=10, pady=10)
 
         #Time Step
-        self.time_step_slider=CustomSlider(self, text="Time Step", from_=0.03, to=1, variable=self.time_step_variable, unit="s")
-        self.time_step_variable.trace("w", lambda a,b,c: print(self.time_step_variable.get()))
+        self.time_step_slider=CustomSlider(self, text="Time Step", from_=0, to=1, variable=self.time_step_variable, unit="s")
+        self.time_step_variable.trace("w", self.slider_deltat_change)
         self.time_step_slider.grid(row=6, column=0, sticky="WE", padx=10, pady=10)
         
         #Start Stop Reset 
@@ -100,6 +100,56 @@ class UpperFrame(ttk.Frame):
         self.place_holder_label=ttk.Label(self)
         self.place_holder_label.grid(row=8, column=0)
 
-    def checkbox_gravitation_change(self): 
-        #config.dyn.set_key
-        pass
+    
+    #Collision Losses Slider 
+    def slider_collosion_losses_change(self): 
+        config.dyn.collision_losses=self.collision_losses_variable.get()
+    
+    #Gravitation Slider 
+    def slider_G_change(self): 
+        config.dyn.G=self.gravitation_variable.get()
+
+    #Simulation Frame Delay Slider 
+    def slider_sframedelay_change(self): 
+        config.dyn.sim_framedelay=self.simulation_frame_delay_variable.get()
+
+    #Time step Slider 
+    def slider_deltat_change(self): 
+        config.dyn.sim_deltat=self.time_step_variable.get()
+
+    #Gravitation Checkbox 
+    def checkbox_do_gravity_change(self):
+        config.dyn.do_gravity=self.checkbox_gravitation_state.get()
+
+    #Collision Checkbox 
+    def checkbox_do_collision_change(self):
+        config.dyn.do_collision=self.checkbox_collision_state.get()
+
+    #Ideal System Checkbox 
+    def checkbox_do_ideal_change(self):
+        config.dyn.do_ideal=self.checkbox_ideal_state.get()
+
+    #Force vector Checkbox 
+    def checkbox_do_force_vector_change(self):
+        config.dyn.show_force_vector=self.checkbox_force_state.get()
+
+    #Velocity vector Checkbox 
+    def checkbox_do_velocity_vector_change(self):
+        config.dyn.show_velocity_vector=self.checkbox_velocity_state.get()
+        
+
+"""
+"G": 0.000000000066743,
+"sim_deltat": 1,
+"visual_framedelay": 10,
+"__sim_framedelay_comment": "sframedelay is in us",
+"sim_framedelay": 100,
+
+"do_gravity": true,
+"do_collision": false,
+
+"show_force_vector": false,
+"show_velocity_vector": false,
+
+"tool": "select"        
+"""
