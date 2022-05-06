@@ -13,6 +13,11 @@ class CustomSlider(ttk.Frame):
         self.resolution: int=resolution
         self.variable: tk.DoubleVar=variable
 
+        # subscribe to external variable updates if a variable was provided
+        if not self.variable is ...:
+            self.variable.trace("w", self._Variable_change_event)
+
+
         #Sliderframe Columnconfigure 
         self.columnconfigure((0,2), uniform="min_max_entrys", weight=1)
         self.columnconfigure(1, weight=2, uniform="min_max_entrys")
@@ -76,6 +81,7 @@ class CustomSlider(ttk.Frame):
         x_slider=value*100/max_ 
         self.slider.set(x_slider)
         self._Update_Variable()
+        self.focus()
 
     #min max Entry change 
     def _Limit_Entry_Change(self, event=...): 
@@ -96,6 +102,7 @@ class CustomSlider(ttk.Frame):
         x_slider=value*100/max_ 
         self.slider.set(x_slider)
         self._Update_Variable()
+        self.focus()
 
     #Checks if an argument is given 
     def _Update_Variable(self):
@@ -105,3 +112,7 @@ class CustomSlider(ttk.Frame):
         if x == self.variable.get(): 
             return 
         self.variable.set(x)
+    
+    def _Variable_change_event(self, a, b, c):
+        self.current_value.set(str(self.variable.get()))
+        self._Value_Entry_Change()

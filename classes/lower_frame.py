@@ -63,11 +63,11 @@ class LowerFrame(ttk.Frame):
     #Entry Name
     def _object_name_entry_change(self, event=...): 
         sim_space.selected_object.name=self.object_name_entry_variable.get()
+        self.focus()
 
     #Checkbox ON/OFF 
     def _checkbox_on_off_change(self): 
         sim_space.selected_object.active=self.checkbox_object_state.get()
-        print("checkbox: ", sim_space.selected_object.active)
 
     #Slider Mass
     def _slider_mass_change(self, a,b,c): 
