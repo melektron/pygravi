@@ -17,6 +17,7 @@ import classes.render_frame
 import classes.config_frame
 import classes.edit_frame
 import classes.antiblurr
+import classes.planets
 
 
 
@@ -51,8 +52,12 @@ class Window(tk.Tk):
 
 
 if __name__ == "__main__":
+    #myobj = classes.planets.Planets.planet_to_object(classes.planets.Planets.request_planet_data("earth")[0])
+    #sim_space.append_object(myobj)
     sim_space.load_objects(config.user.objects)
     sim_space.run_simulation()
     mywindow = Window()
+    #mywindow.state("zoomed")
+    mywindow.geometry("1600x600")
     mywindow.mainloop()
     sim_space.stop_simulation()

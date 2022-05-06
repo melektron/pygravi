@@ -23,7 +23,14 @@ class Vector2D:
 
     @classmethod
     def from_cart(cls, values: tuple | list) -> "Vector2D":
-        return Vector2D(values[0], values[1])
+        return cls(values[0], values[1])
+    
+    @classmethod
+    def from_polar(cls, values: tuple | list) -> "Vector2D":
+        new = cls(0, 0)
+        new.phi = values[0]
+        new.r = values[1]
+        return new
 
     # properties for cartesian values
     @property

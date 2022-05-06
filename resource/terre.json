@@ -1,0 +1,45 @@
+{
+    "id": "terre",
+    "name": "La Terre",
+    "englishName": "Earth",
+    "isPlanet": true,
+    "moons": [
+        {
+            "moon": "La Lune",
+            "rel": "https://api.le-systeme-solaire.net/rest/bodies/lune"
+        }
+    ],
+    "semimajorAxis": 149598023,
+    "perihelion": 147095000,
+    "aphelion": 152100000,
+    "eccentricity": 0.01670,
+    "inclination": 0,
+    "mass": {
+        "massValue": 5.97237,
+        "massExponent": 24
+    },
+    "vol": {
+        "volValue": 1.08321,
+        "volExponent": 12
+    },
+    "density": 5.51360,
+    "gravity": 9.80000,
+    "escape": 11190.00000,
+    "meanRadius": 6371.00840,
+    "equaRadius": 6378.13660,
+    "polarRadius": 6356.80000,
+    "flattening": 0.00335,
+    "dimension": "",
+    "sideralOrbit": 365.25600,
+    "sideralRotation": 23.93450,
+    "aroundPlanet": null,
+    "discoveredBy": "",
+    "discoveryDate": "",
+    "alternativeName": "",
+    "axialTilt": 23.4393,
+    "avgTemp": 288,
+    "mainAnomaly": 358.61700,
+    "argPeriapsis": 85.90100,
+    "longAscNode": 18.27200,
+    "bodyType": "Planet"
+}

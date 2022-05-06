@@ -1,0 +1,49 @@
+{
+    "id": "mars",
+    "name": "Mars",
+    "englishName": "Mars",
+    "isPlanet": true,
+    "moons": [
+        {
+            "moon": "Phobos",
+            "rel": "https://api.le-systeme-solaire.net/rest/bodies/phobos"
+        },
+        {
+            "moon": "Deïmos",
+            "rel": "https://api.le-systeme-solaire.net/rest/bodies/deimos"
+        }
+    ],
+    "semimajorAxis": 227939200,
+    "perihelion": 206700000,
+    "aphelion": 249200000,
+    "eccentricity": 0.09350,
+    "inclination": 1.85000,
+    "mass": {
+        "massValue": 6.41712,
+        "massExponent": 23
+    },
+    "vol": {
+        "volValue": 1.63180,
+        "volExponent": 11
+    },
+    "density": 3.93410,
+    "gravity": 3.71000,
+    "escape": 5030.00000,
+    "meanRadius": 3389.50000,
+    "equaRadius": 3396.19000,
+    "polarRadius": 3376.20000,
+    "flattening": 0.00589,
+    "dimension": "",
+    "sideralOrbit": 686.98000,
+    "sideralRotation": 24.62290,
+    "aroundPlanet": null,
+    "discoveredBy": "",
+    "discoveryDate": "",
+    "alternativeName": "",
+    "axialTilt": 25.19,
+    "avgTemp": 210,
+    "mainAnomaly": 19.41200,
+    "argPeriapsis": 286.23100,
+    "longAscNode": 49.66700,
+    "bodyType": "Planet"
+}

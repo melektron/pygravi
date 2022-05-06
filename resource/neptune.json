@@ -1,0 +1,97 @@
+{
+    "id": "neptune",
+    "name": "Neptune",
+    "englishName": "Neptune",
+    "isPlanet": true,
+    "moons": [
+        {
+            "moon": "Triton",
+            "rel": "https://api.le-systeme-solaire.net/rest/bodies/triton"
+        },
+        {
+            "moon": "Néreïde",
+            "rel": "https://api.le-systeme-solaire.net/rest/bodies/nereide"
+        },
+        {
+            "moon": "Naïade",
+            "rel": "https://api.le-systeme-solaire.net/rest/bodies/naiade"
+        },
+        {
+            "moon": "Thalassa",
+            "rel": "https://api.le-systeme-solaire.net/rest/bodies/thalassa"
+        },
+        {
+            "moon": "Despina",
+            "rel": "https://api.le-systeme-solaire.net/rest/bodies/despina"
+        },
+        {
+            "moon": "Galatée",
+            "rel": "https://api.le-systeme-solaire.net/rest/bodies/galatee"
+        },
+        {
+            "moon": "Larissa",
+            "rel": "https://api.le-systeme-solaire.net/rest/bodies/larissa"
+        },
+        {
+            "moon": "Protée",
+            "rel": "https://api.le-systeme-solaire.net/rest/bodies/protee"
+        },
+        {
+            "moon": "Halimède",
+            "rel": "https://api.le-systeme-solaire.net/rest/bodies/halimede"
+        },
+        {
+            "moon": "Psamathée",
+            "rel": "https://api.le-systeme-solaire.net/rest/bodies/psamathee"
+        },
+        {
+            "moon": "Sao",
+            "rel": "https://api.le-systeme-solaire.net/rest/bodies/sao"
+        },
+        {
+            "moon": "Laomédie",
+            "rel": "https://api.le-systeme-solaire.net/rest/bodies/laomedie"
+        },
+        {
+            "moon": "Néso",
+            "rel": "https://api.le-systeme-solaire.net/rest/bodies/neso"
+        },
+        {
+            "moon": "Hippocampe",
+            "rel": "https://api.le-systeme-solaire.net/rest/bodies/hippocampe"
+        }
+    ],
+    "semimajorAxis": 4498396441,
+    "perihelion": 4459753056,
+    "aphelion": 4537039826,
+    "eccentricity": 0.01130,
+    "inclination": 1.76900,
+    "mass": {
+        "massValue": 1.02413,
+        "massExponent": 26
+    },
+    "vol": {
+        "volValue": 6.25400,
+        "volExponent": 13
+    },
+    "density": 1.63800,
+    "gravity": 11.15000,
+    "escape": 23560.00000,
+    "meanRadius": 24622.00000,
+    "equaRadius": 24764.00000,
+    "polarRadius": 24341.00000,
+    "flattening": 0.01708,
+    "dimension": "",
+    "sideralOrbit": 60189.00000,
+    "sideralRotation": 16.11000,
+    "aroundPlanet": null,
+    "discoveredBy": "Urbain Le Verrier, John Couch Adams, Johann Galle",
+    "discoveryDate": "23/09/1846",
+    "alternativeName": "",
+    "axialTilt": 28.3,
+    "avgTemp": 55,
+    "mainAnomaly": 256.22800,
+    "argPeriapsis": 256.93200,
+    "longAscNode": 131.82300,
+    "bodyType": "Planet"
+}

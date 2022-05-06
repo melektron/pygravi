@@ -87,15 +87,14 @@ class RenderFrame(ttk.Frame):
         #    self.render_canvas.coords(
         #        self.testarrow, 0, 0, self.testvector.x, self.testvector.y)
         
+        # get mouse position in rendering frame that is to be preserved
+        mousepos_sim: Vector2D = Vector2D.from_cart(self.render2simcords(event.x, event.y))
         # change zoom factor
         self.zoom_factor += config.const.zoom_step * event.delta / 120
-
-        # change rendering offset
-        #mousepos: Vector2D = Vector2D(event.x, event.y)
-        # apply reverse zoom factor and add current offset to get position in simulation
-        #mousepos /= self.zoom_factor
-        #mousepos += self.render_offset
-        #self.render_offset.cart = mousepos.cart
+        # get the new render coordinate of the preserved simulation coordinate
+        oldmousepos_now_render: Vector2D = Vector2D.from_cart(self.sim2rendercords(mousepos_sim.x, mousepos_sim.y))
+        # add to old offset
+        self.render_offset += Vector2D(event.x - oldmousepos_now_render.x, event.y - oldmousepos_now_render.y )
         
 
 

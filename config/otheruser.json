@@ -1,0 +1,24 @@
+{
+    "hivename": "user",
+    "writeprotect": false,
+    "keys": {
+        "objects": [
+            {
+                "name": "object0",
+                "radius": 25,
+                "mass": 50970000,
+                "pos": [500, 300],
+                "vel": [-1, 0],
+                "force": [0, 0]
+            },
+            {
+                "name": "object1",
+                "radius": 25,
+                "mass": 50970000,
+                "pos": [300, 280],
+                "vel": [1, 0],
+                "force": [0, 0]
+            }
+        ]
+    }
+}
