@@ -15,10 +15,6 @@ Low_Value=False
 class UpperFrame(ttk.Frame): 
     def __init__(self, master): 
         super().__init__(master)
-        self.gravitation_variable=tk.DoubleVar()
-        self.collision_losses_variable=tk.DoubleVar()
-        self.simulation_frame_delay_variable=tk.DoubleVar()
-        self.time_step_variable=tk.DoubleVar()
 
 
         #Headline 
@@ -49,7 +45,8 @@ class UpperFrame(ttk.Frame):
         self.checkbox_ideal=ttk.Checkbutton(self.checkbox_frame,variable=self.checkbox_ideal_state, onvalue=High_Value, offvalue=Low_Value, text="Ideal System", command=self.checkbox_do_ideal_change) 
         self.checkbox_ideal.grid(row=2, column=0, sticky="W")
 
-        #Collision Losse
+        #Collision Losses
+        self.collision_losses_variable=tk.DoubleVar(value=config.dyn.collision_losses)
         self.collision_losses_slider=CustomSlider(self, text="Collision Losses", from_=0, to=1, variable=self.collision_losses_variable, unit="J")
         self.collision_losses_variable.trace("w", self.slider_collosion_losses_change)
         self.collision_losses_slider.grid(row=2, column=0, sticky="WE", padx=10, pady=10)
@@ -69,16 +66,19 @@ class UpperFrame(ttk.Frame):
         self.checkbox_velocity.grid(row=1, column=0, sticky="W")
 
         #Slider Gravitation
+        self.gravitation_variable=tk.DoubleVar(value=config.dyn.G)
         self.gravitation_slider=CustomSlider(self, text="Gravitation", from_=0, to=1, variable=self.gravitation_variable, resolution=15)
         self.gravitation_variable.trace("w", self.slider_G_change)
         self.gravitation_slider.grid(row=4, column=0, sticky="WE", padx=10, pady=10)
 
         #Slider Simulation Frame Delay
+        self.simulation_frame_delay_variable=tk.DoubleVar(value=config.dyn.sim_framedelay)
         self.simulation_frame_delay_slider=CustomSlider(self, text="Simulation Frame Delay", from_=0.03, to=1, variable=self.simulation_frame_delay_variable, unit="us")
         self.simulation_frame_delay_variable.trace("w", self.slider_sframedelay_change)
         self.simulation_frame_delay_slider.grid(row=5, column=0, sticky="WE", padx=10, pady=10)
 
         #Slider Time Step
+        self.time_step_variable=tk.DoubleVar(value=config.dyn.sim_deltat)
         self.time_step_slider=CustomSlider(self, text="Time Step", from_=0, to=1, variable=self.time_step_variable, unit="s")
         self.time_step_variable.trace("w", self.slider_deltat_change)
         self.time_step_slider.grid(row=6, column=0, sticky="WE", padx=10, pady=10)

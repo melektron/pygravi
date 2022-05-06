@@ -30,10 +30,6 @@ class Window(tk.Tk):
         self.columnconfigure(1, weight=3)
         #self.columnconfigure(2, weight=0)
         self.rowconfigure(1, weight=1)
-
-        #self.startstop = tk.IntVar(value=True)
-        #self.startstop_check = ttk.Checkbutton(self, text="simulate", onvalue=True, offvalue=False, variable=self.startstop, command=self.startstopfn) 
-        #self.startstop_check.grid(row=0, column=0, sticky="W")
         
 
         self.edit_frame = classes.edit_frame.EditFrame(self, width=350)
@@ -48,12 +44,6 @@ class Window(tk.Tk):
         self.config_frame.grid_propagate(0)  # keep right column fixed size (width)
 
         self.after(config.dyn.visual_framedelay, self.render_objects)
-    
-    def startstopfn(self):
-        if self.startstop.get() == True:
-            sim_space.run_simulation()
-        else:
-            sim_space.pause_simulation()
 
     def render_objects(self) -> None:
         # Render Start
@@ -68,7 +58,6 @@ if __name__ == "__main__":
     #myobj = classes.planets.Planets.planet_to_object(classes.planets.Planets.request_planet_data("earth")[0])
     #sim_space.append_object(myobj)
     sim_space.load_objects(config.user.objects)
-    sim_space.run_simulation()
     mywindow = Window()
     #mywindow.state("zoomed")
     mywindow.geometry("1600x600")

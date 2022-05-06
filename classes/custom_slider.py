@@ -56,6 +56,11 @@ class CustomSlider(ttk.Frame):
         self.max_entry.bind("<Return>", self._Limit_Entry_Change)
         self.max_entry.grid(row=1, column=2, sticky="WE")
 
+        # call the variable change callback manually to update the slider to values set in the variable
+        # before creation of the slider (e.g. during construction)
+        if not self.variable is ...:
+            self._Variable_change_event(...,...,...)
+
         
     #Scale change 
     def _SliderChange(self, v): 
