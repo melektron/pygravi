@@ -31,9 +31,9 @@ class Window(tk.Tk):
         #self.columnconfigure(2, weight=0)
         self.rowconfigure(1, weight=1)
 
-        self.startstop = tk.IntVar(value=True)
-        self.startstop_check = ttk.Checkbutton(self, text="simulate", onvalue=True, offvalue=False, variable=self.startstop, command=self.startstopfn) 
-        self.startstop_check.grid(row=0, column=0, sticky="W")
+        #self.startstop = tk.IntVar(value=True)
+        #self.startstop_check = ttk.Checkbutton(self, text="simulate", onvalue=True, offvalue=False, variable=self.startstop, command=self.startstopfn) 
+        #self.startstop_check.grid(row=0, column=0, sticky="W")
         
 
         self.edit_frame = classes.edit_frame.EditFrame(self, width=350)
