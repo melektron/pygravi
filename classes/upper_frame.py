@@ -7,6 +7,7 @@ import tkinter as tk
 import tkinter.ttk as ttk
 from classes.custom_slider import CustomSlider
 import classes.config as config 
+from classes.sim_space import sim_space
 
 High_Value=True
 Low_Value=False
@@ -87,10 +88,10 @@ class UpperFrame(ttk.Frame):
         self.start_frame.grid(row=7, column=0, sticky="WE", padx=10, pady=10)
         self.start_frame.columnconfigure((0,1,2), weight=1)
 
-        self.start_button=ttk.Button(self.start_frame, text="START")
+        self.start_button=ttk.Button(self.start_frame, text="START", command=sim_space.run_simulation)
         self.start_button.grid(row=0, column=0, sticky="WE", padx=10, ipady=5)
 
-        self.stop_button=ttk.Button(self.start_frame, text="STOPP")
+        self.stop_button=ttk.Button(self.start_frame, text="STOP", command=sim_space.pause_simulation)
         self.stop_button.grid(row=0, column=1, sticky="WE", padx=10, ipady=5)
 
         self.reset_button=ttk.Button(self.start_frame, text="RESET")
