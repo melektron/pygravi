@@ -7,8 +7,8 @@ import tkinter as tk
 import tkinter.ttk as ttk
 from classes.custom_slider import CustomSlider
 
-High_Value=1
-Low_Value=0
+High_Value=True
+Low_Value=False
 
 class LowerFrame(ttk.Frame): 
     def __init__(self, master): 
@@ -36,19 +36,31 @@ class LowerFrame(ttk.Frame):
         self.object_name_entry=ttk.Entry(self.object_frame)
         self.object_name_entry.grid(row=0, column=1, sticky="WE")
 
-        #Checkbox Ideal System 
+        #Checkbox ON/OFF
         self.checkbox_object_state=tk.IntVar(value=High_Value)
         self.checkbox_object=ttk.Checkbutton(self,variable=self.checkbox_object_state, onvalue=High_Value, offvalue=Low_Value, text="Object ON/OFF") #command and variable
         self.checkbox_object.grid(row=2, column=0, sticky="W", pady=10, padx=10)
 
         #Mass
-        self.mass_slider=CustomSlider(self, text="Mass", from_=0.03, to=1, variable=self.mass_variable, unit="kg")
-        self.mass_variable.trace("w", lambda a,b,c: print(self.mass_variable.get()))
+        self.mass_slider=CustomSlider(self, text="Mass", from_=0, to=1, variable=self.mass_variable, unit="kg")
+        self.mass_variable.trace("w", self.slider_mass_change)
         self.columnconfigure(0, weight=1)
         self.mass_slider.grid(row=3, column=0, sticky="WE", pady=10, padx=10)
 
         #Diameter
-        self.diameter_slider=CustomSlider(self, text="Diameter", from_=0.03, to=1, variable=self.diameter_variable, unit="m")
-        self.diameter_variable.trace("w", lambda a,b,c: print(self.diameter_variable.get()))
+        self.diameter_slider=CustomSlider(self, text="Diameter", from_=0, to=1, variable=self.diameter_variable, unit="m")
+        self.diameter_variable.trace("w", self.slider_diameter_change)
         self.columnconfigure(0, weight=1)
         self.diameter_slider.grid(row=4, column=0, sticky="WE", pady=10, padx=10)
+
+    #Checkbox ON/OFF 
+    def Checkbox_on_off_change(self): 
+        pass
+
+    #Checkbox Mass
+    def slider_mass_change(self, a,b,c): 
+        pass
+
+    #Checkbox Diameter
+    def slider_diameter_change(self, a,b,c): 
+        pass

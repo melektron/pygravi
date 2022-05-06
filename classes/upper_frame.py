@@ -68,22 +68,22 @@ class UpperFrame(ttk.Frame):
         self.checkbox_velocity=ttk.Checkbutton(self.checkbox_frame,variable=self.checkbox_collision_state, onvalue=High_Value, offvalue=Low_Value, text="Velocity", command=self.checkbox_do_velocity_vector_change) 
         self.checkbox_velocity.grid(row=1, column=0, sticky="W")
 
-        #Gravitation
-        self.gravitation_slider=CustomSlider(self, text="Gravitation", from_=0, to=1, variable=self.gravitation_variable)
+        #Slider Gravitation
+        self.gravitation_slider=CustomSlider(self, text="Gravitation", from_=0, to=1, variable=self.gravitation_variable, resolution=15)
         self.gravitation_variable.trace("w", self.slider_G_change)
         self.gravitation_slider.grid(row=4, column=0, sticky="WE", padx=10, pady=10)
 
-        #Simulation Frame Delay
+        #Slider Simulation Frame Delay
         self.simulation_frame_delay_slider=CustomSlider(self, text="Simulation Frame Delay", from_=0.03, to=1, variable=self.simulation_frame_delay_variable, unit="us")
         self.simulation_frame_delay_variable.trace("w", self.slider_sframedelay_change)
         self.simulation_frame_delay_slider.grid(row=5, column=0, sticky="WE", padx=10, pady=10)
 
-        #Time Step
+        #Slider Time Step
         self.time_step_slider=CustomSlider(self, text="Time Step", from_=0, to=1, variable=self.time_step_variable, unit="s")
         self.time_step_variable.trace("w", self.slider_deltat_change)
         self.time_step_slider.grid(row=6, column=0, sticky="WE", padx=10, pady=10)
         
-        #Start Stop Reset 
+        #Start Stop Reset Button
         self.start_frame=ttk.Frame(self)
         self.start_frame.grid(row=7, column=0, sticky="WE", padx=10, pady=10)
         self.start_frame.columnconfigure((0,1,2), weight=1)
@@ -103,19 +103,19 @@ class UpperFrame(ttk.Frame):
 
     
     #Collision Losses Slider 
-    def slider_collosion_losses_change(self): 
+    def slider_collosion_losses_change(self, a,b,c): 
         config.dyn.collision_losses=self.collision_losses_variable.get()
     
     #Gravitation Slider 
-    def slider_G_change(self): 
+    def slider_G_change(self, a,b,c): 
         config.dyn.G=self.gravitation_variable.get()
 
     #Simulation Frame Delay Slider 
-    def slider_sframedelay_change(self): 
+    def slider_sframedelay_change(self, a,b,c): 
         config.dyn.sim_framedelay=self.simulation_frame_delay_variable.get()
 
     #Time step Slider 
-    def slider_deltat_change(self): 
+    def slider_deltat_change(self, a,b,c): 
         config.dyn.sim_deltat=self.time_step_variable.get()
 
     #Gravitation Checkbox 
@@ -138,19 +138,3 @@ class UpperFrame(ttk.Frame):
     def checkbox_do_velocity_vector_change(self):
         config.dyn.show_velocity_vector=self.checkbox_velocity_state.get()
         
-
-"""
-"G": 0.000000000066743,
-"sim_deltat": 1,
-"visual_framedelay": 10,
-"__sim_framedelay_comment": "sframedelay is in us",
-"sim_framedelay": 100,
-
-"do_gravity": true,
-"do_collision": false,
-
-"show_force_vector": false,
-"show_velocity_vector": false,
-
-"tool": "select"        
-"""
