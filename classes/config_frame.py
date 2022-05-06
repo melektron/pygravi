@@ -26,8 +26,3 @@ class ConfigFrame(ttk.Frame):
         self.lower_.update()
 
 
-# a reference to the main ConfigFrame instance that will be initialized in the window class
-config_frame: ConfigFrame = ...
-        
- 
-

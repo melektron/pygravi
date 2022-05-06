@@ -150,7 +150,6 @@ class RenderFrame(ttk.Frame):
         
         if config.dyn.tool == "select":
             sim_space.selected_object = clicked_obj
-            config_frame.update_object_prop()
         
 
     def canvas_mouse_scroll(self, event):
