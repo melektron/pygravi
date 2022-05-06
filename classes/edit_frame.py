@@ -13,6 +13,7 @@ import tkinter.ttk as ttk
 
 from pyparsing import col
 import classes.config as config
+from classes.vector import Vector2D
 
 
 class Headline(ttk.Frame):
@@ -62,7 +63,7 @@ class EditFrame(ttk.Frame):
         self.tool_button_dup = ttk.Radiobutton(self.toolbar_frame, variable=self.current_tool_variable, value="dup", text="Duplicate")
         self.tool_button_dup.grid(row = 1, column=2, columnspan=2, sticky="WE", padx=5)
 
-        #Place between object tools and object list 
+        #space between object tools and object list 
         self.place_holder_label=ttk.Label(self)
         self.place_holder_label.grid(row=2, column=0)
 
@@ -70,13 +71,28 @@ class EditFrame(ttk.Frame):
         # headline object list
         self.headline_object_list = Headline(self, text="Objects")
         self.headline_object_list.grid(row=3, column=0, sticky="WE", padx=10, pady=10)
+        
+        # create the tree view to display all the objects
+        columns = ("name", "location")
+        self.object_list_tree=ttk.Treeview(self, columns=columns, show="tree headings")
+        self.object_list_tree.grid(row=4, column=0, sticky="WNE", padx=10)
+        
+        # define the headings
+        self.object_list_tree.heading("name", text="Name")
+        self.object_list_tree.heading("location", text="Location")
+
+        # configuring columns
+        self.object_list_tree.column("name", width=100, anchor="w")
+        self.object_list_tree.column("location", width=100, anchor="w")
+
+        # add sample data
+        self.object_list_tree.insert("", tk.END, values=("Flo", repr(Vector2D(56, 23.62e23))))
+
 
 
     # trace callback for self.current_tool_variable
     def tool_change(self, a, b, c):
         config.dyn.tool = self.current_tool_variable.get()
         
-        self.object_list=ttk.Treeview(self, columns=columns, show="tree")
-
-        columns=("Color", "Name")
+       
 
