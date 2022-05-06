@@ -17,8 +17,8 @@ class Headline(ttk.Frame):
     def __init__(self, master, text="", **kwargs):
         self.master = master
         super().__init__(master, borderwidth=2, relief=tk.GROOVE, **kwargs)
-        self.headline_label = ttk.Label(self, text=text, font=(24))
-        self.headline_label.grid(row=0, column=0, sticky="W", padx=5)
+        self.headline_label = ttk.Label(self, text=text, font=(40))
+        self.headline_label.grid(row=0, column=0, sticky="W")
 
 class EditFrame(ttk.Frame):
     def __init__(self, master, **kwargs):
@@ -30,11 +30,11 @@ class EditFrame(ttk.Frame):
         # === object tools
         # Headline
         self.headline_object_tools = Headline(self, text="Object Tools")
-        self.headline_object_tools.grid(row=0, column=0, sticky="WE")
+        self.headline_object_tools.grid(row=0, column=0, sticky="WE", padx=10, pady=10)
 
         # toolbar
-        self.toolbar_frame = ttk.Frame(self, borderwidth=2, relief=tk.GROOVE)
-        self.toolbar_frame.grid(row=1, column=0, sticky="WE", padx=5)
+        self.toolbar_frame = ttk.Frame(self)
+        self.toolbar_frame.grid(row=1, column=0, sticky="WE", padx=10, pady=10)
         self.toolbar_frame.columnconfigure((0, 1, 2, 3), weight=1, uniform="toolbar_buttons")
         self.current_tool_variable = tk.StringVar(value=config.dyn.tool)
         self.current_tool_variable.trace("w", self.tool_change)
@@ -60,11 +60,14 @@ class EditFrame(ttk.Frame):
         self.tool_button_dup = ttk.Radiobutton(self.toolbar_frame, variable=self.current_tool_variable, value="dup", text="Duplicate")
         self.tool_button_dup.grid(row = 1, column=2, columnspan=2, sticky="WE", padx=5)
 
+        #Place between object tools and object list 
+        self.place_holder_label=ttk.Label(self)
+        self.place_holder_label.grid(row=2, column=0)
 
         # === object list
         # headline object list
         self.headline_object_list = Headline(self, text="Objects")
-        self.headline_object_list.grid(row=2, column=0, sticky="WE")
+        self.headline_object_list.grid(row=3, column=0, sticky="WE", padx=10, pady=10)
 
 
     # trace callback for self.current_tool_variable
