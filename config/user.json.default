@@ -9,7 +9,8 @@
                 "mass": 50970000,
                 "pos": [750, 500],
                 "vel": [0, 0],
-                "force": [0, 0]
+                "force": [0, 0],
+                "active": true
             },
             {
                 "name": "object1",
@@ -17,7 +18,8 @@
                 "mass": 50970000,
                 "pos": [250, 200],
                 "vel": [0, 0],
-                "force": [0, 0]
+                "force": [0, 0],
+                "active": true
             },
             {
                 "name": "object2",
@@ -25,8 +27,18 @@
                 "mass": 50970000,
                 "pos": [500, 200],
                 "vel": [0, 0],
-                "force": [0, 0]
+                "force": [0, 0],
+                "active": true
             }
-        ]
+        ],
+        "default_object": {
+            "name": "default",
+            "radius": 25,
+            "mass": 50970000,
+            "pos": [0, 0],
+            "vel": [0, 0],
+            "force": [0, 0],
+            "active": true
+        }
     }
 }

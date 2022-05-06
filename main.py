@@ -31,16 +31,29 @@ class Window(tk.Tk):
         #self.columnconfigure(2, weight=0)
         self.rowconfigure(1, weight=1)
 
+        self.startstop = tk.IntVar(value=True)
+        self.startstop_check = ttk.Checkbutton(self, text="simulate", onvalue=True, offvalue=False, variable=self.startstop, command=self.startstopfn) 
+        self.startstop_check.grid(row=0, column=0, sticky="W")
+        
+
         self.edit_frame = classes.edit_frame.EditFrame(self, width=350)
-        self.edit_frame.grid(row=1, column=0, sticky="NS", padx=5, pady=5)
+        self.edit_frame.grid(row=1, column=0, sticky="NSEW", padx=5, pady=5)
+        self.edit_frame.grid_propagate(0)  # keep left column fixed size (width)
 
         self.render_frame = classes.render_frame.RenderFrame(self, width=300)
         self.render_frame.grid(row=1, column=1, sticky="NSEW", padx=5, pady=5)
 
         self.config_frame = classes.config_frame.ConfigFrame(self, width=350)
         self.config_frame.grid(row=1, column=2, sticky="NS", padx=5, pady=5)
+        self.config_frame.grid_propagate(0)  # keep right column fixed size (width)
 
         self.after(config.dyn.vframedelay, self.render_objects)
+    
+    def startstopfn(self):
+        if self.startstop.get() == True:
+            sim_space.run_simulation()
+        else:
+            sim_space.pause_simulation()
 
     def render_objects(self) -> None:
         # Render Start

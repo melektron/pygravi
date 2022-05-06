@@ -52,7 +52,7 @@ class _SimSpace:
     def load_objects(self, exp_obj: list[_ObjExportType]) -> None:
         for obj in exp_obj:
             self.objects.append(SimObject(obj["name"], obj["radius"], obj["mass"], Vector2D.from_cart(
-                obj["pos"]), Vector2D.from_cart(obj["vel"]), Vector2D.from_cart(obj["force"])))
+                obj["pos"]), Vector2D.from_cart(obj["vel"]), Vector2D.from_cart(obj["force"]), obj["active"]))
 
     def append_object(self, obj: SimObject):
         self.objects.append(obj)
@@ -74,8 +74,10 @@ class _SimSpace:
         if config.dyn.do_gravity:
             # calculate the force vectors
             for obj in self.objects:
+                if not obj.active: continue
                 obj.force.cart = (0, 0)
                 for obj2 in self.objects:
+                    if not obj2.active: continue
                     obj.force = obj.force + obj.gforce(obj2)
                     #print("Object: ", obj.name, "\tPos: ", obj.pos, "\tOhter: ", obj2.pos, "\tTemp Force: ", obj.force)
 
@@ -153,6 +155,7 @@ class _SimSpace:
 
         # calculate the movement based on the current velocity
         for obj in self.objects:
+            if not obj.active: continue
             obj.pos += obj.vel * config.dyn.deltat
 
     def run_simulation(self) -> None:

@@ -26,8 +26,9 @@ class SimObject:
     pos: Vector2D      # current position of the object
     vel: Vector2D      # current object velocity
     force: Vector2D    # current force on the object
+    active: bool       # flag if the object should be simulated or not
 
-    def __init__(self, name: str, r: float, mass: float, pos: Vector2D = ..., vel: Vector2D = ..., force: Vector2D = ...):
+    def __init__(self, name: str, r: float, mass: float, pos: Vector2D = ..., vel: Vector2D = ..., force: Vector2D = ..., active: bool = True):
         if pos is ...:
             self.pos = Vector2D(0, 0)
         else:
@@ -42,6 +43,8 @@ class SimObject:
             self.force = Vector2D(0, 0)
         else:
             self.force = force
+        
+        self.active = active
 
         self.name: str = name
         self.radius: float = r

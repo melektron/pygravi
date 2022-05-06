@@ -9,8 +9,10 @@
         "sframedelay": 100,
 
         "do_gravity": true,
-        "do_collision": true,
+        "do_collision": false,
 
-        "show_fvector": false
+        "show_fvector": false,
+
+        "tool": "select"
     }
 }
