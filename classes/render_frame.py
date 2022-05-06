@@ -148,6 +148,9 @@ class RenderFrame(ttk.Frame):
             sim_space.objects.remove(clicked_obj)   # delete the object from the simulation and rendering list
             return
         
+        if config.dyn.tool == "select":
+            sim_space.selected_object = clicked_obj
+        
 
     def canvas_mouse_scroll(self, event):
         # for testoval
@@ -175,8 +178,11 @@ class RenderFrame(ttk.Frame):
         x0, y0 = self.sim2rendercords(obj.pos.x - obj.radius, obj.pos.y - obj.radius)
         x1, y1 = self.sim2rendercords(obj.pos.x + obj.radius, obj.pos.y + obj.radius)
         fill = "black"
-        if not obj.active:
+        if obj is sim_space.selected_object:
+            fill="lightblue"
+        elif not obj.active:
             fill = "lightgray"
+        
 
         # render oval representing the object
         if obj.ca_circle_id is ...:
