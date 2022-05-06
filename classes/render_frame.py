@@ -4,9 +4,7 @@ Author
 
 import tkinter.ttk as ttk
 import tkinter as tk
-from wsgiref import simple_server
 
-import click
 from classes.vector import Vector2D
 from classes.sim_object import SimObject
 from classes.sim_space import sim_space
