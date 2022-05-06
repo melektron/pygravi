@@ -2,7 +2,7 @@
     "hivename": "dyn",
     "writeprotect": false,
     "keys": {
-        "G": 0.000000000066743,
+        "G": 6.6743e-11,
         "sim_deltat": 1,
         "visual_framedelay": 10,
         "__sim_framedelay_comment": "sframedelay is in us",
