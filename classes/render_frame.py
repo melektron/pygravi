@@ -189,7 +189,7 @@ class RenderFrame(ttk.Frame):
             self.render_canvas.itemconfig(obj.ca_circle_id, fill=fill)
 
         # show force vector
-        if config.dyn.show_fvector:#
+        if config.dyn.show_force_vector:#
             # get the values
             fx0, fy0 = self.sim2rendercords(obj.pos.x, obj.pos.y)
             fx1, fy1 = self.sim2rendercords(obj.pos.x + obj.force.x, obj.pos.y + obj.force.y)

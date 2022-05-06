@@ -8,11 +8,13 @@ import shutil
 from typing import Any
 
 
-class ConfigPermissionError(Exception):
+class ConfigPermissionError(BaseException):
     ...
 
 
 class _Confhive:
+    init_done: bool = False
+
     def __init__(self, hivefile: str) -> None:
         self.__hivefile = hivefile
 
@@ -33,18 +35,37 @@ class _Confhive:
         # load all the values
         for key, value in self.__hive["keys"].items():
             # load arguments
-            setattr(self, key, value)
+            self.__dict__[key] = value
+        
+        self.init_done = True
+        print("init done")
 
-    def set_key(self, config_key: str, value: Any) -> None:
+    # catch attribute asign events
+    def __setattr__(self, config_key: str, value: Any) -> None:
+        if self.init_done:
+            if self.__wprot:
+                raise ConfigPermissionError(
+                    f"Config hive {self.__hivename} is write protected")
+            self.__dict__[config_key] = value   # save to class dict
+            self.__hive["keys"][config_key] = value # save to hive dict
+        else:
+            self.__dict__[config_key] = value   # before init is done, use a default implementation of __setattr__
+                                                # to be able to set attributes normally
+    
+    # method that saves the current state to file
+    def save(self):
         if self.__wprot:
-            raise ConfigPermissionError(
-                f"Config hive {self.__hivename} is write protected")
+            return
+        with open(self.__hivefile, "w") as fd:
+            j.dump(self.__hive, fd)
 
-        self.__hive["keys"][config_key] = value
-        fd = open(self.__hivefile, "w")
-        j.dump(self.__hive, fd)
-        fd.close()
-        setattr(config_key, value)
+    # export written config to file uppon deletion unless the hive is write protected
+    #def __del__(self):
+    #    if self.__wprot:
+    #        return
+    #    self.save()
+
+        
 
 
 user = _Confhive("config/user.json")

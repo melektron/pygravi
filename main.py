@@ -47,7 +47,7 @@ class Window(tk.Tk):
         self.config_frame.grid(row=1, column=2, sticky="NS", padx=5, pady=5)
         self.config_frame.grid_propagate(0)  # keep right column fixed size (width)
 
-        self.after(config.dyn.vframedelay, self.render_objects)
+        self.after(config.dyn.visual_framedelay, self.render_objects)
     
     def startstopfn(self):
         if self.startstop.get() == True:
@@ -61,7 +61,7 @@ class Window(tk.Tk):
             self.render_frame.render_object(obj)
         # Render End
         # recall render after x time
-        self.after(config.dyn.vframedelay, self.render_objects)
+        self.after(config.dyn.visual_framedelay, self.render_objects)
 
 
 if __name__ == "__main__":
@@ -74,3 +74,8 @@ if __name__ == "__main__":
     mywindow.geometry("1600x600")
     mywindow.mainloop()
     sim_space.stop_simulation()
+
+    # save the config
+    config.user.save()
+    config.dyn.save()
+    # const cannot be saved

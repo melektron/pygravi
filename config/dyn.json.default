@@ -3,15 +3,17 @@
     "writeprotect": false,
     "keys": {
         "G": 0.000000000066743,
-        "deltat": 1,
-        "vframedelay": 10,
-        "__sframedelay_comment": "sframedelay is in us",
-        "sframedelay": 100,
+        "sim_deltat": 1,
+        "visual_framedelay": 10,
+        "__sim_framedelay_comment": "sframedelay is in us",
+        "sim_framedelay": 100,
 
         "do_gravity": true,
         "do_collision": false,
+        "do_ideal": true,
 
-        "show_fvector": false,
+        "show_force_vector": false,
+        "show_velocity_vector": false,
 
         "tool": "select"
     }
