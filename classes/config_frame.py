@@ -21,7 +21,13 @@ class ConfigFrame(ttk.Frame):
         self.lower_=LowerFrame(self)
         self.rowconfigure(1, weight=1)
         self.lower_.grid(row=1, column=0, sticky="N")
-        
+    
+    def update_object_prop(self):
+        self.lower_.update()
+
+
+# a reference to the main ConfigFrame instance that will be initialized in the window class
+config_frame: ConfigFrame = ...
         
  
 

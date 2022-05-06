@@ -44,6 +44,7 @@ class Window(tk.Tk):
         self.render_frame.grid(row=1, column=1, sticky="NSEW", padx=5, pady=5)
 
         self.config_frame = classes.config_frame.ConfigFrame(self, width=350)
+        classes.config_frame.config_frame = self.config_frame   # save reference for global access
         self.config_frame.grid(row=1, column=2, sticky="NS", padx=5, pady=5)
         self.config_frame.grid_propagate(0)  # keep right column fixed size (width)
 
