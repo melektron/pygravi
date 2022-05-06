@@ -6,6 +6,7 @@ MrFlunter
 import tkinter as tk
 import tkinter.ttk as ttk
 from classes.custom_slider import CustomSlider
+import classes.config as config 
 
 High_Value=1
 Low_Value=0
@@ -34,7 +35,7 @@ class UpperFrame(ttk.Frame):
 
         #Checkbox Gravitation 
         self.checkbox_gravitation_state=tk.IntVar(value=High_Value)
-        self.checkbox_gravitation=ttk.Checkbutton(self.checkbox_frame,variable=self.checkbox_gravitation_state, onvalue=High_Value, offvalue=Low_Value, text="Gravitation") #command and variable
+        self.checkbox_gravitation=ttk.Checkbutton(self.checkbox_frame,variable=self.checkbox_gravitation_state, onvalue=High_Value, offvalue=Low_Value, text="Gravitation", command=self.checkbox_gravitation_change) #command and variable
         self.checkbox_gravitation.grid(row=0, column=0, sticky="W")
 
         #Checkbox Collision 
@@ -98,3 +99,7 @@ class UpperFrame(ttk.Frame):
         #Place between Upper and Lower Frame
         self.place_holder_label=ttk.Label(self)
         self.place_holder_label.grid(row=8, column=0)
+
+    def checkbox_gravitation_change(self): 
+        #config.dyn.set_key
+        pass
