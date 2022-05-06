@@ -56,16 +56,16 @@ class UpperFrame(ttk.Frame):
 
         #Vector Frame (force,velocity)
         self.vector_checkbox_frame=ttk.Frame(self)
-        self.vector_checkbox_frame.grid(row=2, column=0, sticky="WE", padx=10, pady=10)
+        self.vector_checkbox_frame.grid(row=3, column=0, sticky="WE", padx=10, pady=10)
 
         #Checkbox force vector 
         self.checkbox_force_state=tk.IntVar(value=config.dyn.show_force_vector)
-        self.checkbox_force=ttk.Checkbutton(self.checkbox_frame,variable=self.checkbox_force_state, onvalue=High_Value, offvalue=Low_Value, text="Force", command=self.checkbox_do_force_vector_change) 
+        self.checkbox_force=ttk.Checkbutton(self.vector_checkbox_frame,variable=self.checkbox_force_state, onvalue=High_Value, offvalue=Low_Value, text="Force", command=self.checkbox_do_force_vector_change) 
         self.checkbox_force.grid(row=0, column=0, sticky="W")
 
         #Checkbox velocity vector
         self.checkbox_velocity_state=tk.IntVar(value=config.dyn.show_velocity_vector)
-        self.checkbox_velocity=ttk.Checkbutton(self.checkbox_frame,variable=self.checkbox_collision_state, onvalue=High_Value, offvalue=Low_Value, text="Velocity", command=self.checkbox_do_velocity_vector_change) 
+        self.checkbox_velocity=ttk.Checkbutton(self.vector_checkbox_frame,variable=self.checkbox_velocity_state, onvalue=High_Value, offvalue=Low_Value, text="Velocity", command=self.checkbox_do_velocity_vector_change) 
         self.checkbox_velocity.grid(row=1, column=0, sticky="W")
 
         #Slider Gravitation
