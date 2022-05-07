@@ -25,6 +25,7 @@ class _Event:
 # objects
 objects_change: _Event = _Event()   # objects have been added/removed (no value)
 selection_change: _Event = _Event() # selected object has changed (no value)
+object_prop_change: _Event = _Event()   # an object property was changed, some views migth have to refresh
 
 # view
 show_force: _Event = _Event()   # value is True/False for ON/OFF

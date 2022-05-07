@@ -91,17 +91,14 @@ class RenderFrame(ttk.Frame):
                 self.active_tool = ""
                 self.tool_action_active = False
                 self.influenced_object = ...
+                events.object_prop_change.trigger()
                 return
         
         # === handle object independent tools
         if config.dyn.tool == "new":
             # create a new object from the default values
-            new_obj = SimObject(
-                config.user.default_object["name"],
-                config.user.default_object["radius"],
-                config.user.default_object["mass"],
-                Vector2D.from_cart(self.render2simcords(event.x, event.y))
-                )
+            new_obj = deepcopy(sim_space.default_object)
+            new_obj.pos.cart = self.render2simcords(event.x, event.y)
             sim_space.objects.append(new_obj)   # add the new object to the simulation
             events.objects_change.trigger()
             return

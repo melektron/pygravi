@@ -10,7 +10,8 @@
                 "pos": [750, 500],
                 "vel": [0, 0],
                 "force": [0, 0],
-                "active": true
+                "active": true,
+                "statio": false
             },
             {
                 "name": "object1",
@@ -19,7 +20,8 @@
                 "pos": [250, 200],
                 "vel": [0, 0],
                 "force": [0, 0],
-                "active": true
+                "active": true,
+                "statio": false
             },
             {
                 "name": "object2",
@@ -28,7 +30,8 @@
                 "pos": [500, 200],
                 "vel": [0, 0],
                 "force": [0, 0],
-                "active": true
+                "active": true,
+                "statio": false
             }
         ],
         "default_object": {
@@ -38,7 +41,8 @@
             "pos": [0, 0],
             "vel": [0, 0],
             "force": [0, 0],
-            "active": true
+            "active": true,
+            "statio": false
         }
     }
 }

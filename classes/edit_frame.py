@@ -8,12 +8,19 @@ The GUI frame on the left of the window for adding/remoing/selecting simulation 
 
 """
 
+from mailbox import _singlefileMailbox
 import tkinter as tk
 import tkinter.ttk as ttk
+from turtle import back
+from wsgiref import simple_server
+from numpy import isin
 
 from pyparsing import col
 import classes.config as config
 from classes.vector import Vector2D
+from classes.sim_object import SimObject
+import classes.events as events
+from classes.sim_space import sim_space
 
 
 class Headline(ttk.Frame):
@@ -68,31 +75,101 @@ class EditFrame(ttk.Frame):
         self.place_holder_label.grid(row=2, column=0)
 
         # === object list
+        # subscribe to object change events to get notified when object list should change
+        events.objects_change.subscribe(self.update_object_list)
+        events.object_prop_change.subscribe(self.update_object_props)
+        events.selection_change.subscribe(self.update_selection)
+
         # headline object list
         self.headline_object_list = Headline(self, text="Objects")
         self.headline_object_list.grid(row=3, column=0, sticky="WE", padx=10, pady=10)
         
         # create the tree view to display all the objects
-        columns = ("name", "location")
-        self.object_list_tree=ttk.Treeview(self, columns=columns, show="tree headings")
-        self.object_list_tree.grid(row=4, column=0, sticky="WNE", padx=10)
+        columns = ("active")
+        self.object_tree=ttk.Treeview(self, columns=columns, show="tree headings")
+        self.object_tree.grid(row=4, column=0, sticky="WNE", padx=10)
         
         # define the headings
-        self.object_list_tree.heading("name", text="Name")
-        self.object_list_tree.heading("location", text="Location")
+        self.object_tree.heading("#0", text="Name")
+        self.object_tree.heading("active", text="Active")
 
         # configuring columns
-        self.object_list_tree.column("name", width=100, anchor="w")
-        self.object_list_tree.column("location", width=100, anchor="w")
+        self.object_tree.column("#0", width=150, anchor="w")    # automatic first column
+        self.object_tree.column("active", width=50, anchor="w")
 
-        # add sample data
-        self.object_list_tree.insert("", tk.END, values=("Flo", repr(Vector2D(56, 23.62e23))))
+        # dict to map treeview id's to actual objects
+        self.tree_id_to_obj: dict[str, SimObject] = {}
 
+        # default object to list
+        self.object_tree_default_object = self.object_tree.insert("", tk.END, id="default", text="Default Object", values=(str(True)), tags=("default"))
+        self.configure_colors("default", sim_space.default_object.color)
 
+        # get notification when selection is made
+        self.object_tree.bind("<<TreeviewSelect>>", self.treeview_select_callback)
+        
+        
+        
+        # update object list manualy the first time
+        self.update_object_list()
+    
+    # method that automatically configures back and foreground of a treeview tag depending on the given background color
+    def configure_colors(self, tag_name: str, bgcolor: str):
+        # turn color string in a float rgb value (0.0 - 1.0)
+        red, green, blue = tuple(c / 65535 for c in self.winfo_rgb(bgcolor))
+        # ajust fg for bg brightness https://stackoverflow.com/questions/3942878/how-to-decide-font-color-in-white-or-black-depending-on-background-color
+        fgcolor = "black" if (red*0.299 + green*0.587 + blue*0.114) > 183 else "white"
+        self.object_tree.tag_configure(tag_name, background=bgcolor, foreground=fgcolor)
 
     # trace callback for self.current_tool_variable
     def tool_change(self, a, b, c):
         config.dyn.tool = self.current_tool_variable.get()
-        
+    
+    # method to update object list with current objects (also used as objects_change event callback)
+    def update_object_list(self, event_data=...):
+        # delete old items
+        for id, obj in self.tree_id_to_obj.copy().items():
+            if not obj in sim_space.objects:
+                self.object_tree.delete(id)
+                self.tree_id_to_obj.pop(id)
+        # potentially add new items
+        for obj in sim_space.objects:
+            if not obj in self.tree_id_to_obj.values():
+                # add the object
+                new_id = self.object_tree.insert("", tk.END, text=obj.name, values=(str(obj.active)))
+                self.object_tree.item(new_id, tags=(new_id))
+                self.configure_colors(new_id, obj.color)
+                self.tree_id_to_obj[new_id] = obj
+    
+    # object property change event callback to update all properties of the current objects with new values
+    def update_object_props(self, event_data=...):
+        # default objects
+        self.object_tree.item(self.object_tree_default_object, text=sim_space.default_object.name, values=(str(bool(sim_space.default_object.active))))
+        # regular objects
+        for id, obj in self.tree_id_to_obj.items():
+            self.object_tree.item(id, text=obj.name, values=(str(bool(obj.active))))
+            self.configure_colors(id, obj.color)
+
+    # selection change event callback
+    def update_selection(self, event_data=...):
+        if event_data is self: return   # ignore events sent by self
+        if sim_space.selected_object is ...:
+            self.object_tree.selection_clear()
+        else:
+            # get tree view id corresponding to the object by reverse dict lookup
+            selid = next(key for key, value in self.tree_id_to_obj.items() if value is sim_space.selected_object)
+            # select the item
+            self.object_tree.selection_set(selid)
+            
+
+    def treeview_select_callback(self, event=...):
+        if len(self.object_tree.selection()) == 0:
+            sim_space.selected_object = ... # deselect all
+        else:
+            sel = self.object_tree.selection()[0]    # only take first selection
+            if sel == "default":    # if default object
+                sim_space.selected_object = sim_space.default_object
+            else:
+                sim_space.selected_object = self.tree_id_to_obj[sel]
+        events.selection_change.trigger(self) # self is transmitted for the class to know that the event was sent by itself to ignore it
        
 

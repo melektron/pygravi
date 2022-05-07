@@ -71,33 +71,42 @@ class LowerFrame(ttk.Frame):
 
     #Entry Name
     def _object_name_entry_change(self, event=...): 
-        if not isinstance(sim_space.selected_object, SimObject): return     # only do that when a valid object is selected. if nothing is selected, it would be ellipsis
+        if not isinstance(sim_space.selected_object, SimObject): # when nothing is selected
+            self.object_name_entry_variable.set("")     # make name empty
+            return
         sim_space.selected_object.name=self.object_name_entry_variable.get()
         self.focus()
+        events.object_prop_change.trigger()
 
     #Checkbox active
     def _checkbox_active_change(self): 
         if not isinstance(sim_space.selected_object, SimObject): return     # only do that when a valid object is selected. if nothing is selected, it would be ellipsis
         sim_space.selected_object.active=self.checkbox_active_state.get()
+        events.object_prop_change.trigger()
     
     #Checkbox stationary
     def _checkbox_statio_change(self): 
         if not isinstance(sim_space.selected_object, SimObject): return     # only do that when a valid object is selected. if nothing is selected, it would be ellipsis
         sim_space.selected_object.statio=self.checkbox_statio_state.get()
+        events.object_prop_change.trigger()
 
     #Slider Mass
     def _slider_mass_change(self, a,b,c): 
         if not isinstance(sim_space.selected_object, SimObject): return     # only do that when a valid object is selected. if nothing is selected, it would be ellipsis
         sim_space.selected_object.mass=self.mass_variable.get()
+        events.object_prop_change.trigger()
 
     #Slider Radius
     def _slider_diameter_change(self, a,b,c): 
         if not isinstance(sim_space.selected_object, SimObject): return     # only do that when a valid object is selected. if nothing is selected, it would be ellipsis
         sim_space.selected_object.radius=self.diameter_variable.get()
+        events.object_prop_change.trigger()
 
     #Werte aus auswahl auslesen
     def update(self, event_data): 
-        if not isinstance(sim_space.selected_object, SimObject): return     # only do that when a valid object is selected. if nothing is selected, it would be ellipsis
+        if not isinstance(sim_space.selected_object, SimObject):    # when nothing is selected
+            self.object_name_entry_variable.set("")     # only make name empty
+            return
         self.object_name_entry_variable.set(sim_space.selected_object.name)
         self.checkbox_active_state.set(sim_space.selected_object.active)
         self.checkbox_statio_state.set(sim_space.selected_object.statio)

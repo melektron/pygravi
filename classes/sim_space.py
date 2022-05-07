@@ -33,7 +33,9 @@ class _SimSpace:
 
     # list of all objects
     objects: list[SimObject] = ...
-    selected_object: SimObject
+    selected_object: SimObject = ...
+    default_object: SimObject = ...
+
 
     # executer pool
     exec_pool: PoolExecutor = ...
@@ -54,7 +56,11 @@ class _SimSpace:
     def load_objects(self, exp_obj: list[_ObjExportType]) -> None:
         for obj in exp_obj:
             self.objects.append(SimObject(obj["name"], obj["radius"], obj["mass"], Vector2D.from_cart(
-                obj["pos"]), Vector2D.from_cart(obj["vel"]), Vector2D.from_cart(obj["force"]), obj["active"]))
+                obj["pos"]), Vector2D.from_cart(obj["vel"]), Vector2D.from_cart(obj["force"]), obj["active"], obj["statio"]))
+    
+    def load_default_object(self, exp_obj: dict) -> None:
+        self.default_object=SimObject(exp_obj["name"], exp_obj["radius"], exp_obj["mass"], Vector2D.from_cart(
+            exp_obj["pos"]), Vector2D.from_cart(exp_obj["vel"]), Vector2D.from_cart(exp_obj["force"]), exp_obj["active"], exp_obj["statio"])
 
     def append_object(self, obj: SimObject):
         self.objects.append(obj)

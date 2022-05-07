@@ -18,6 +18,7 @@ import classes.config_frame
 import classes.edit_frame
 import classes.antiblurr
 import classes.planets
+import classes.events as events
 
 
 
@@ -57,6 +58,8 @@ if __name__ == "__main__":
     #myobj = classes.planets.Planets.planet_to_object(classes.planets.Planets.request_planet_data("earth")[0])
     #sim_space.append_object(myobj)
     sim_space.load_objects(config.user.objects)
+    sim_space.load_default_object(config.user.default_object)
+    events.objects_change.trigger() # notify about object change
     mywindow = Window()
     #mywindow.state("zoomed")
     mywindow.geometry("1600x600")
