@@ -29,22 +29,35 @@ class ObjectPropFrame(ttk.Frame):
         self.object_headline.grid(row=0, column=0, sticky="WE")
 
         #Object Name Frame
-        self.object_frame=ttk.Frame(self)
-        self.object_frame.columnconfigure(1, weight=1)
-        self.object_frame.grid(row=1, column=0, sticky="WE", pady=10, padx=10)
+        self.object_name_frame=ttk.Frame(self)
+        self.object_name_frame.columnconfigure(1, weight=1)
+        self.object_name_frame.grid(row=1, column=0, sticky="WE", pady=10, padx=10)
 
-        self.object_name_label=ttk.Label(self.object_frame, text="Object name: ")
+        self.object_name_label=ttk.Label(self.object_name_frame, text="Object name: ")
         self.object_name_label.grid(row=0, column=0)
 
         self.object_name_entry_variable=tk.StringVar()
-        self.object_name_entry=ttk.Entry(self.object_frame, width=10, textvariable=self.object_name_entry_variable, validate="focusout", validatecommand=self._object_name_entry_change)
+        self.object_name_entry=ttk.Entry(self.object_name_frame, width=10, textvariable=self.object_name_entry_variable, validate="focusout", validatecommand=self._object_name_entry_change)
         self.object_name_entry.bind("<Return>", self._object_name_entry_change)
         self.object_name_entry.grid(row=0, column=1, sticky="WE")
+
+        #Object color Frame
+        self.object_color_frame=ttk.Frame(self)
+        self.object_color_frame.columnconfigure(1, weight=1)
+        self.object_color_frame.grid(row=2, column=0, sticky="WE", padx=10)
+
+        self.object_color_label=ttk.Label(self.object_color_frame, text="Object color: ")
+        self.object_color_label.grid(row=0, column=0)
+
+        self.object_color_entry_variable=tk.StringVar()
+        self.object_color_entry=ttk.Entry(self.object_color_frame, width=10, textvariable=self.object_color_entry_variable, validate="focusout", validatecommand=self._object_color_entry_change)
+        self.object_color_entry.bind("<Return>", self._object_color_entry_change)
+        self.object_color_entry.grid(row=0, column=1, sticky="WE")
         
         # frame for checkboxes (flags)
         self.object_flags_frame = ttk.Frame(self)
         self.object_flags_frame.columnconfigure((0, 0), weight=1, uniform="checkboxes")
-        self.object_flags_frame.grid(row=2, column=0, sticky="WE", padx=10, pady=10)
+        self.object_flags_frame.grid(row=3, column=0, sticky="WE", padx=10, pady=10)
         # Checkbox active
         self.checkbox_active_state=tk.IntVar(value=High_Value)
         self.checkbox_active=ttk.Checkbutton(self.object_flags_frame, variable=self.checkbox_active_state, command=self._checkbox_active_change, onvalue=High_Value, offvalue=Low_Value, text="Active") #command and variable
@@ -58,13 +71,13 @@ class ObjectPropFrame(ttk.Frame):
         self.mass_slider=CustomSlider(self, text="Mass", from_=0, to=1, variable=self.mass_variable, unit="kg")
         self.mass_variable.trace("w", self._slider_mass_change)
         self.columnconfigure(0, weight=1)
-        self.mass_slider.grid(row=3, column=0, sticky="WE", pady=10, padx=10)
+        self.mass_slider.grid(row=4, column=0, sticky="WE", pady=10, padx=10)
 
         #Diameter
         self.diameter_slider=CustomSlider(self, text="Radius", from_=0, to=1, variable=self.diameter_variable, unit="m")
         self.diameter_variable.trace("w", self._slider_diameter_change)
         self.columnconfigure(0, weight=1)
-        self.diameter_slider.grid(row=4, column=0, sticky="WE", pady=10, padx=10)
+        self.diameter_slider.grid(row=5, column=0, sticky="WE", pady=10, padx=10)
 
         # subscribe to selection change event to update all values according to the new selection
         events.selection_change.subscribe(self.update)
@@ -77,6 +90,20 @@ class ObjectPropFrame(ttk.Frame):
         sim_space.selected_object.name=self.object_name_entry_variable.get()
         self.focus()
         events.object_prop_change.trigger()
+    
+    def _object_color_entry_change(self, event=...): 
+        if not isinstance(sim_space.selected_object, SimObject): # when nothing is selected
+            self.object_color_entry_variable.set("")     # make field empty
+            return
+        try:
+            self.winfo_rgb(self.object_color_entry_variable.get())  # try to convert to rgb to see if color is valid
+            sim_space.selected_object.color=self.object_color_entry_variable.get()
+            events.object_prop_change.trigger()
+        except tk.TclError: # tcl error will occur when the color string is invalid
+            # reset to before color
+            self.object_color_entry_variable.set(sim_space.selected_object.color)
+            pass
+        self.focus()
 
     #Checkbox active
     def _checkbox_active_change(self): 
@@ -106,8 +133,10 @@ class ObjectPropFrame(ttk.Frame):
     def update(self, event_data): 
         if not isinstance(sim_space.selected_object, SimObject):    # when nothing is selected
             self.object_name_entry_variable.set("")     # only make name empty
+            self.object_color_entry_variable.set("")
             return
         self.object_name_entry_variable.set(sim_space.selected_object.name)
+        self.object_color_entry_variable.set(sim_space.selected_object.color)
         self.checkbox_active_state.set(sim_space.selected_object.active)
         self.checkbox_statio_state.set(sim_space.selected_object.statio)
         self.mass_variable.set(sim_space.selected_object.mass)

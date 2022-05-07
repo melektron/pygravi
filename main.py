@@ -102,7 +102,7 @@ class Window(tk.Tk):
         if sim_space.clipboard_object is not ...:
             self.render_frame.initiate_paste()
         else:
-            config.dyn.tool = "paste"
+            config.dyn.tool = "paste" 
             events.tool_change.trigger()
         pass
     

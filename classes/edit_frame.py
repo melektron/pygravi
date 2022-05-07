@@ -133,7 +133,7 @@ class EditFrame(ttk.Frame):
     # method that automatically configures back and foreground of a treeview tag depending on the given background color
     def configure_colors(self, tag_name: str, bgcolor: str):
         # turn color string in a float rgb value (0.0 - 1.0)
-        red, green, blue = tuple(c / 65535 for c in self.winfo_rgb(bgcolor))
+        red, green, blue = tuple(c/255 for c in self.winfo_rgb(bgcolor))
         # ajust fg for bg brightness https://stackoverflow.com/questions/3942878/how-to-decide-font-color-in-white-or-black-depending-on-background-color
         fgcolor = "black" if (red*0.299 + green*0.587 + blue*0.114) > 183 else "white"
         self.object_tree.tag_configure(tag_name, background=bgcolor, foreground=fgcolor)
@@ -156,8 +156,9 @@ class EditFrame(ttk.Frame):
     
     # object property change event callback to update all properties of the current objects with new values
     def update_object_props(self, event_data=...):
-        # default objects
+        # default object
         self.object_tree.item(self.object_tree_default_object, text=sim_space.default_object.name, values=(str(bool(sim_space.default_object.active))))
+        self.configure_colors(self.object_tree_default_object, sim_space.default_object.color)
         # regular objects
         for id, obj in self.tree_id_to_obj.items():
             self.object_tree.item(id, text=obj.name, values=(str(bool(obj.active))))

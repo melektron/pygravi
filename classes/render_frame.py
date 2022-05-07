@@ -312,7 +312,7 @@ class RenderFrame(ttk.Frame):
         # get corner positions of objects
         x0, y0 = self.sim2rendercords(obj.pos.x - obj.radius, obj.pos.y - obj.radius)
         x1, y1 = self.sim2rendercords(obj.pos.x + obj.radius, obj.pos.y + obj.radius)
-        fill = "black"
+        fill = obj.color
         if obj is sim_space.selected_object:
             fill="lightblue"
         elif not obj.active:
