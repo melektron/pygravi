@@ -226,7 +226,7 @@ class RenderFrame(ttk.Frame):
             # render the force vectors as arrow lines
             if obj.ca_fvector_id is ...:
                 obj.ca_fvector_id = self.render_canvas.create_line(
-                    fx0, fy0, fx1, fy1, arrow=tk.LAST)
+                    fx0, fy0, fx1, fy1, arrow=tk.LAST, fill="blue")
             else:
                 self.render_canvas.coords(
                     obj.ca_fvector_id,
@@ -245,7 +245,7 @@ class RenderFrame(ttk.Frame):
             # render the force vectors as arrow lines
             if obj.ca_vvector_id is ...:
                 obj.ca_vvector_id = self.render_canvas.create_line(
-                    vx0, vy0, vx1, vy1, arrow=tk.LAST)
+                    vx0, vy0, vx1, vy1, arrow=tk.LAST, fill="red")
             else:
                 self.render_canvas.coords(
                     obj.ca_vvector_id,
