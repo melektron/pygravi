@@ -39,7 +39,7 @@ class LowerFrame(ttk.Frame):
         self.object_name_entry=ttk.Entry(self.object_frame, width=10, textvariable=self.object_name_entry_variable, validate="focusout", validatecommand=self._object_name_entry_change)
         self.object_name_entry.bind("<Return>", self._object_name_entry_change)
         self.object_name_entry.grid(row=0, column=1, sticky="WE")
-
+        
         #Checkbox ON/OFF
         self.checkbox_object_state=tk.IntVar(value=High_Value)
         self.checkbox_object=ttk.Checkbutton(self,variable=self.checkbox_object_state, command=self._checkbox_on_off_change, onvalue=High_Value, offvalue=Low_Value, text="Object ON/OFF") #command and variable

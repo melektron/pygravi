@@ -13,7 +13,7 @@ import time
 import external.GS_timing as acctime    # more accurate timing
 from traceback import print_exc
 from concurrent.futures import ThreadPoolExecutor as PoolExecutor
-import math
+import itertools
 
 import classes.config as config
 from classes.vector import Vector2D
@@ -92,68 +92,26 @@ class _SimSpace:
 
         if config.dyn.do_collision:
             done_objects = []   # list of all objects that have been calculated already
-            # check for collisions
-            for obj in self.objects:
-                for obj2 in self.objects:
-                    # don't check collision with self
-                    if obj is obj2:
-                        continue
-                    if obj in done_objects:
-                        continue
-                    # if collison
-                    if obj.pos.distance_to(obj2.pos) <= obj.radius + obj2.radius:
-                        print(f"vel f: {obj.vel}, {obj2.vel}")
-                        # get direction vector to other object containing the collision angle
-                        direction: Vector2D = obj2.pos - obj.pos
+            # get a list of every possible combination of two different objects
+            object_pairs = itertools.combinations(self.objects, 2) # 2 means two per pair
+            for obj, obj2 in object_pairs:
+                # if the two are colliding
+                if obj.pos.distance_to(obj2.pos) <= obj.radius + obj2.radius:
+                    print(f"vel f: {obj.vel}, {obj2.vel}")
 
-                        # calculate main object
-                        # get the angle delta of the velocity and the collision angle
-                        obj_dphi = direction.phi - obj.vel.phi
-                        obj2_dphi = direction.phi - obj2.vel.phi
+                    # calculate collision using conservation of momentum and some clever vector magic
+                    # Source of formula and code: https://scipython.com/blog/two-dimensional-collisions/
+                    m1, m2 = obj.mass, obj2.mass
+                    M = m1 + m2
+                    r1, r2 = obj.pos, obj2.pos
+                    d = r1.distance_to(r2)**2
+                    v1, v2 = obj.vel, obj2.vel
+                    u1 = v1 - 2*m2 / M * ((v1-v2) @ (r1-r2)) / d * (r1 - r2)
+                    u2 = v2 - 2*m1 / M * ((v2-v1) @ (r2-r1)) / d * (r2 - r1)
+                    obj.vel = u1
+                    obj2.vel = u2
 
-                        # split the velocity in two vectors, one containing the velocity in the collision angle,
-                        # the other one the rest that is not influencec by conservation of momentum
-                        # for object 1
-                        obj_collision_vel: Vector2D = Vector2D.from_polar(
-                            (direction.phi, obj.vel.r*math.cos(obj_dphi)))
-                        obj_carry_vel = Vector2D.from_polar(
-                            (direction.phi-config.const.pi/2, obj.vel.r*math.sin(obj_dphi)))
-                        # for object 2
-                        obj2_collision_vel = Vector2D.from_polar(
-                            (direction.phi, obj2.vel.r*math.cos(obj2_dphi)))
-                        obj2_carry_vel = Vector2D.from_polar(
-                            (direction.phi-config.const.pi/2, obj2.vel.r*math.sin(obj2_dphi)))
-
-                        # calculating the conservation of momentum using the absloute collision velocity according to
-                        # v1' = (m1*v1 + m2*(2*v2-v1)) / (m1+m2)
-                        # for object 1
-                        obj_vel_after = obj.mass * obj_collision_vel.r
-                        obj_vel_after += obj2.mass * \
-                            (2 * obj2_collision_vel.r-obj_collision_vel.r)
-                        obj_vel_after /= obj.mass + obj2.mass
-                        # for object 2
-                        obj2_vel_after = obj2.mass * obj2_collision_vel.r
-                        obj2_vel_after += obj.mass * \
-                            (2 * obj_collision_vel.r-obj2_collision_vel.r)
-                        obj2_vel_after /= obj2.mass + obj.mass
-
-                        # change the value of the collision velocity but keep the angle from before
-                        print(
-                            f"col vel before: {obj_collision_vel}, {obj_collision_vel}")
-                        obj_collision_vel.r = obj_vel_after
-                        obj2_collision_vel.r = obj2_vel_after
-                        print(
-                            f"col vel after : {obj_collision_vel}, {obj_collision_vel}")
-
-                        # set the final velocity of the objects to the carry velocity (that was not affected by the collision)
-                        # plus the collision velocity that has been modified
-                        obj.vel = obj_carry_vel + obj_collision_vel
-                        obj2.vel = obj2_carry_vel + obj2_collision_vel
-
-                        # declare these two objects as done
-                        done_objects += [obj, obj2]
-
-                        print(f"vel a: {obj.vel}, {obj2.vel}")
+                    #print(f"vel a: {obj.vel}, {obj2.vel}")
 
         # calculate the movement based on the current velocity
         for obj in self.objects:
