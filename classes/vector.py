@@ -31,6 +31,9 @@ class Vector2D:
         new.phi = values[0]
         new.r = values[1]
         return new
+    
+    def copy(self) -> "Vector2D":
+        return Vector2D(self._valx, self._valy)
 
     # properties for cartesian values
     @property

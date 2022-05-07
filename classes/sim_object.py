@@ -79,3 +79,17 @@ class SimObject:
                            other.mass) / self.pos.distance_to(other.pos)
         direction.r = absforce
         return direction
+    
+    # creates a new copy with identical properties, shape descripdors will not be copied
+    def copy(self) -> "SimObject":
+        return SimObject(
+            self.name,
+            self.radius,
+            self.mass,
+            self.pos.copy(),
+            self.vel.copy(),
+            self.force.copy(),
+            self.active,
+            self.statio,
+            self.color
+        )

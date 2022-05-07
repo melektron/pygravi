@@ -7,6 +7,8 @@ import tkinter.ttk as ttk
 import tkinter as tk
 from wsgiref import simple_server
 
+import click
+
 from classes.vector import Vector2D
 from classes.sim_object import SimObject
 from classes.sim_space import sim_space
@@ -42,6 +44,7 @@ class RenderFrame(ttk.Frame):
         self.tool_action_active: bool = False   # flag that indicates that a tool has previously been used on an object by clicking and that the tool is still active
         self.active_tool: str = ""              # name of the tool that is still active
         self.influenced_object_start_position: Vector2D = Vector2D(0, 0)    # position of the object influenced by the tool when the object was first clicked on
+        self.influenced_object_start_active: bool = False   # The active flag of the object when the action started
         self.influenced_object: SimObject = ... # object influencec by the current action
 
 
@@ -69,25 +72,27 @@ class RenderFrame(ttk.Frame):
         if self.tool_action_active:
             if self.active_tool == "move":
                 self.influenced_object.pos.cart = self.render2simcords(event.x, event.y)
+            if self.active_tool == "paste":
+                self.influenced_object.pos.cart = self.render2simcords(event.x, event.y)
 
     def canvas_mouse_b3p(self, event):
         # === initiate view moving
         self.render_offset_before.cart = self.render_offset.cart
         self.render_offset_init_mouse_pos.cart = (event.x, event.y)
         self.render_offset_move_active = True
-        # set canvas in focus on any mouse actino at the end so other widgets don't steel focus before
+        # set canvas in focus on any mouse action at the end so other widgets don't steel focus before
         self.render_canvas.focus_set()
     
     def canvas_mouse_b3r(self, event):
         self.render_offset_move_active = False
         
-        # set canvas in focus on any mouse actino at the end so other widgets don't steel focus before
+        # set canvas in focus on any mouse action at the end so other widgets don't steel focus before
         self.render_canvas.focus_set()
     
     def canvas_mouse_b1p(self, event):
         # somecode
 
-        # set canvas in focus on any mouse actino at the end so other widgets don't steel focus before
+        # set canvas in focus on any mouse action at the end so other widgets don't steel focus before
         self.render_canvas.focus_set()
     
     def canvas_mouse_b1r(self, event):
@@ -97,20 +102,49 @@ class RenderFrame(ttk.Frame):
             if self.active_tool == "move":
                 self.influenced_object.pos.cart = self.render2simcords(event.x, event.y)    # place object on mouse position
                 self.influenced_object.vel.cart = (0, 0)    # zero the velocity after manually placing an object
-                self.influenced_object.active = True    # enable the object for simulation
+                self.influenced_object.active = self.influenced_object_start_active    # return activity state to what it was before
                 self.active_tool = ""
                 self.tool_action_active = False
                 self.influenced_object = ...
                 events.object_prop_change.trigger()
+                # set canvas in focus on any mouse action at the end so other widgets don't steel focus before
+                self.render_canvas.focus_set()
+                return
+            elif self.active_tool == "paste":
+                self.influenced_object.pos.cart = self.render2simcords(event.x, event.y)    # place object on mouse position
+                self.influenced_object.active = self.influenced_object_start_active    # return activity state to what it was before
+                self.active_tool = ""
+                self.tool_action_active = False
+                self.influenced_object = ...
+                events.objects_change.trigger()
+                # set canvas in focus on any mouse action at the end so other widgets don't steel focus before
+                self.render_canvas.focus_set()
                 return
         
         # === handle object independent tools
         if config.dyn.tool == "new":
             # create a new object from the default values
-            new_obj = deepcopy(sim_space.default_object)
+            new_obj = sim_space.default_object.copy()
             new_obj.pos.cart = self.render2simcords(event.x, event.y)
             sim_space.objects.append(new_obj)   # add the new object to the simulation
             events.objects_change.trigger()
+            # set canvas in focus on any mouse action at the end so other widgets don't steel focus before
+            self.render_canvas.focus_set()
+            return
+        
+        if config.dyn.tool == "paste":
+            # create a new object from the clipboard unless it is empty
+            if sim_space.clipboard_object is ...: 
+                # set canvas in focus on any mouse actino at the end so other widgets don't steel focus before
+                self.render_canvas.focus_set()
+                return
+            new_obj = sim_space.clipboard_object.copy()
+            new_obj.pos.cart = self.render2simcords(event.x, event.y)
+            new_obj.vel.cart = (0, 0)
+            sim_space.objects.append(new_obj)   # add the new object to the simulation
+            events.objects_change.trigger()
+            # set canvas in focus on any mouse actino at the end so other widgets don't steel focus before
+            self.render_canvas.focus_set()
             return
 
         
@@ -123,27 +157,42 @@ class RenderFrame(ttk.Frame):
             if pow(x - obj.pos.x, 2) + pow(y - obj.pos.y, 2) < pow(obj.radius, 2): # https://stackoverflow.com/questions/481144/equation-for-testing-if-a-point-is-inside-a-circle
                 clicked_obj = obj
         if clicked_obj is ...:
+            # clicked next to object, remove selection
+            sim_space.selected_object = ...
+            events.selection_change.trigger()
+            # set canvas in focus on any mouse action at the end so other widgets don't steel focus before
+            self.render_canvas.focus_set()
             return
         
         # === handle tools that need an object to be clicked
         if config.dyn.tool == "move":
-            self.influenced_object = clicked_obj
-            self.influenced_object.active = False
-            self.influenced_object_start_position.cart = clicked_obj.pos.cart
-            self.active_tool = "move"
-            self.tool_action_active = True
+            self.initiate_move(clicked_obj)
+            # set canvas in focus on any mouse action at the end so other widgets don't steel focus before
+            self.render_canvas.focus_set()
             return
         
         if config.dyn.tool == "delete":
             sim_space.objects.remove(clicked_obj)   # delete the object from the simulation and rendering list
             events.objects_change.trigger()
+            # set canvas in focus on any mouse action at the end so other widgets don't steel focus before
+            self.render_canvas.focus_set()
             return
         
         if config.dyn.tool == "select":
             sim_space.selected_object = clicked_obj
             events.selection_change.trigger()
+            # set canvas in focus on any mouse action at the end so other widgets don't steel focus before
+            self.render_canvas.focus_set()
+            return
         
-        # set canvas in focus on any mouse actino at the end so other widgets don't steel focus before
+        if config.dyn.tool == "copy":
+            sim_space.clipboard_object = clicked_obj.copy()
+            # set canvas in focus on any mouse action at the end so other widgets don't steel focus before
+            self.render_canvas.focus_set()
+            return
+        
+        
+        # set canvas in focus on any mouse action at the end so other widgets don't steel focus before
         self.render_canvas.focus_set()
         
     def canvas_mouse_scroll(self, event):
@@ -167,7 +216,6 @@ class RenderFrame(ttk.Frame):
         self.render_offset += Vector2D(event.x - oldmousepos_now_render.x, event.y - oldmousepos_now_render.y )
         
     def canvas_escape(self, event):
-        print("canvasescape")
         # === handle active tool actions
         # if any tool is active, do the corresponding tool action
         if self.tool_action_active:
@@ -179,10 +227,16 @@ class RenderFrame(ttk.Frame):
                 self.tool_action_active = False
                 self.influenced_object = ...
                 return
+            elif self.active_tool == "paste":
+                # abort paste
+                sim_space.objects.remove(self.influenced_object)
+                self.active_tool = ""
+                self.tool_action_active = False
+                self.influenced_object = ...
+                return
 
         # === deselect current selection if no tool is active
         if sim_space.selected_object is not ...:
-            print("desel")
             sim_space.selected_object = ...
             events.selection_change.trigger()
             return
@@ -193,7 +247,29 @@ class RenderFrame(ttk.Frame):
             events.tool_change.trigger()
             return
         
-        
+    def copy_selection(self):
+        if not sim_space.selected_object is ...:
+            sim_space.clipboard_object = sim_space.selected_object.copy()
+
+    def initiate_paste(self):
+        if self.tool_action_active: return  # don't override existing action
+        self.tool_action_active = True
+        self.active_tool = "paste"
+        self.influenced_object = sim_space.clipboard_object.copy()
+        self.influenced_object_start_active = self.influenced_object.active
+        self.influenced_object.active = False
+        self.influenced_object.vel.cart = (0, 0)
+        sim_space.objects.append(self.influenced_object)   # add the new object to the simulation
+        print("ctrlv")
+    
+    def initiate_move(self, obj: SimObject):
+        if self.tool_action_active: return  # don't override existing action
+        self.influenced_object = obj
+        self.influenced_object_start_active = obj.active
+        self.influenced_object.active = False
+        self.influenced_object_start_position.cart = obj.pos.cart
+        self.active_tool = "move"
+        self.tool_action_active = True
 
     def render_objects(self, objs: list[SimObject]) -> None:
         # make a copy of all shapes currently on the canvas

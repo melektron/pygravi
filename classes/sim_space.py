@@ -80,27 +80,31 @@ class _SimSpace:
 
     def do_sim_frame(self) -> None:
         # function that runns the calculations for each simulation frame
+        # get list of all active objects
+        active_objects: list[SimObject] = [obj for obj in self.objects if obj.active]
+
         if config.dyn.do_gravity:
             # calculate the force vectors
-            for obj in self.objects:
+            for obj in active_objects:
                 if not obj.active: continue
                 obj.force.cart = (0, 0)
-                for obj2 in self.objects:
+                for obj2 in active_objects:
                     if not obj2.active: continue
                     obj.force = obj.force + obj.gforce(obj2)
                     #print("Object: ", obj.name, "\tPos: ", obj.pos, "\tOhter: ", obj2.pos, "\tTemp Force: ", obj.force)
 
             # calculate velocity based on the current force
-            for obj in self.objects:
+            for obj in active_objects:
+                if not obj.active or obj.statio:
+                    obj.vel.cart = (0, 0)
                 # acceleration caused by the force on the object
                 accel: Vector2D = obj.force / obj.mass
                 # add the velocity caused by the acceleration in the configured time step to the object velocity
                 obj.vel += accel * config.dyn.sim_deltat
 
         if config.dyn.do_collision:
-            done_objects = []   # list of all objects that have been calculated already
             # get a list of every possible combination of two different objects
-            object_pairs = itertools.combinations(self.objects, 2) # 2 means two per pair
+            object_pairs = itertools.combinations(active_objects, 2) # 2 means two per pair
             for obj, obj2 in object_pairs:
                 # if the two are colliding
                 if obj.pos.distance_to(obj2.pos) <= obj.radius + obj2.radius:
@@ -119,7 +123,7 @@ class _SimSpace:
                     #print(f"vel a: {obj.vel}, {obj2.vel}")
 
         # calculate the movement based on the current velocity
-        for obj in self.objects:
+        for obj in active_objects:
             if not obj.active: continue  # don't move disabled objects
             if obj.statio: continue  # don't move stationary objects
             obj.pos += obj.vel * config.dyn.sim_deltat

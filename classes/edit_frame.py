@@ -167,7 +167,8 @@ class EditFrame(ttk.Frame):
     def update_selection(self, event_data=...):
         if event_data is self: return   # ignore events sent by self
         if sim_space.selected_object is ...:
-            self.object_tree.selection_clear()
+            for sel in self.object_tree.selection():
+                self.object_tree.selection_remove(sel)
         else:
             # get tree view id corresponding to the object by reverse dict lookup
             selid = next(key for key, value in self.tree_id_to_obj.items() if value is sim_space.selected_object)
