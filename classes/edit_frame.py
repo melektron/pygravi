@@ -135,7 +135,7 @@ class EditFrame(ttk.Frame):
         for obj in sim_space.objects:
             if not obj in self.tree_id_to_obj.values():
                 # add the object
-                new_id = self.object_tree.insert("", tk.END, text=obj.name, values=(str(obj.active)))
+                new_id = self.object_tree.insert("", tk.END, text=obj.name, values=(str(bool(obj.active))))
                 self.object_tree.item(new_id, tags=(new_id))
                 self.configure_colors(new_id, obj.color)
                 self.tree_id_to_obj[new_id] = obj
