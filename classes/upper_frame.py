@@ -8,6 +8,7 @@ import tkinter.ttk as ttk
 from classes.custom_slider import CustomSlider
 import classes.config as config 
 from classes.sim_space import sim_space
+import classes.events as events
 
 High_Value=True
 Low_Value=False
@@ -57,12 +58,12 @@ class UpperFrame(ttk.Frame):
 
         #Checkbox force vector 
         self.checkbox_force_state=tk.IntVar(value=config.dyn.show_force_vector)
-        self.checkbox_force=ttk.Checkbutton(self.vector_checkbox_frame,variable=self.checkbox_force_state, onvalue=High_Value, offvalue=Low_Value, text="Force", command=self.checkbox_do_force_vector_change) 
+        self.checkbox_force=ttk.Checkbutton(self.vector_checkbox_frame,variable=self.checkbox_force_state, onvalue=High_Value, offvalue=Low_Value, text="Show Force", command=self.checkbox_do_force_vector_change) 
         self.checkbox_force.grid(row=0, column=0, sticky="W")
 
         #Checkbox velocity vector
         self.checkbox_velocity_state=tk.IntVar(value=config.dyn.show_velocity_vector)
-        self.checkbox_velocity=ttk.Checkbutton(self.vector_checkbox_frame,variable=self.checkbox_velocity_state, onvalue=High_Value, offvalue=Low_Value, text="Velocity", command=self.checkbox_do_velocity_vector_change) 
+        self.checkbox_velocity=ttk.Checkbutton(self.vector_checkbox_frame,variable=self.checkbox_velocity_state, onvalue=High_Value, offvalue=Low_Value, text="Show Velocity", command=self.checkbox_do_velocity_vector_change) 
         self.checkbox_velocity.grid(row=1, column=0, sticky="W")
 
         #Slider Gravitation

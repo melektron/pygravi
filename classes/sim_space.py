@@ -97,8 +97,6 @@ class _SimSpace:
             for obj, obj2 in object_pairs:
                 # if the two are colliding
                 if obj.pos.distance_to(obj2.pos) <= obj.radius + obj2.radius:
-                    print(f"vel f: {obj.vel}, {obj2.vel}")
-
                     # calculate collision using conservation of momentum and some clever vector magic
                     # Source of formula and code: https://scipython.com/blog/two-dimensional-collisions/
                     m1, m2 = obj.mass, obj2.mass
@@ -115,7 +113,8 @@ class _SimSpace:
 
         # calculate the movement based on the current velocity
         for obj in self.objects:
-            if not obj.active: continue
+            if not obj.active: continue  # don't move disabled objects
+            if obj.statio: continue  # don't move stationary objects
             obj.pos += obj.vel * config.dyn.sim_deltat
 
     def run_simulation(self) -> None:

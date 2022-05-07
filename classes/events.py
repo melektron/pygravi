@@ -21,5 +21,12 @@ class _Event:
         self._subs.append(callback)
     
 # predefined events
-selection_change: _Event = _Event()
+
+# objects
+objects_change: _Event = _Event()   # objects have been added/removed (no value)
+selection_change: _Event = _Event() # selected object has changed (no value)
+
+# view
+show_force: _Event = _Event()   # value is True/False for ON/OFF
+show_velocity: _Event = _Event()   # value is True/False for ON/OFF
 

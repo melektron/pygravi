@@ -3,6 +3,7 @@
     "writeprotect": true,
     "keys": {
         "pi": 3.141592653589793238462643383279502488,
-        "zoom_step": 0.1
+        "zoom_step": 0.1,
+        "velocity_vector_display_factor": 5e3
     }
 }

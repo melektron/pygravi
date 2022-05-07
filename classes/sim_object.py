@@ -19,6 +19,7 @@ class SimObject:
     # set when first drawn on the canvas
     ca_circle_id: int = ...
     ca_fvector_id: int = ...
+    ca_vvector_id: int = ...
 
     # physical attributes
     name: str          # readable and identifiable name of the object
@@ -28,7 +29,7 @@ class SimObject:
     vel: Vector2D      # current object velocity
     force: Vector2D    # current force on the object
     active: bool       # flag if the object should be simulated or not
-    stat: bool         # stationary flag. if true, this object cannot move^
+    statio: bool         # stationary flag. if true, this object cannot move^
     color: str         # the fill color for rendering unless it is overridden be the renderer
 
     def __init__(
@@ -40,7 +41,7 @@ class SimObject:
         vel: Vector2D = ..., 
         force: Vector2D = ..., 
         active: bool = True,
-        stat: bool = False,
+        statio: bool = False,
         color: str = "black"
         ):
         
@@ -63,7 +64,7 @@ class SimObject:
         else:
             self.force = force
         self.active = active
-        self.stat = stat
+        self.statio = statio
         self.color = color
 
     def gforce(self, other: "SimObject") -> Vector2D:

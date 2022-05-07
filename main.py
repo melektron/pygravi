@@ -47,8 +47,7 @@ class Window(tk.Tk):
 
     def render_objects(self) -> None:
         # Render Start
-        for obj in sim_space.objects:
-            self.render_frame.render_object(obj)
+        self.render_frame.render_objects(sim_space.objects)
         # Render End
         # recall render after x time
         self.after(config.dyn.visual_framedelay, self.render_objects)

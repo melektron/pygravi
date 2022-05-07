@@ -2,6 +2,7 @@
 Author
 """
 
+from copy import deepcopy
 import tkinter.ttk as ttk
 import tkinter as tk
 
@@ -29,6 +30,13 @@ class RenderFrame(ttk.Frame):
         # flag that indicates that the mouse button has been pressed to initialize offset moving
         self.render_offset_move_active: bool = False
 
+        # list of all currently valid object oval descriptors
+        self.object_ovals: list[int] = []
+        # list of all currently valid object force vector descriptors
+        self.object_force_vectors: list[int] = []
+        # list of all currently valid object velocity vector descriptors
+        self.object_velocity_vectors: list[int] = []
+
         # === Object tools
         self.tool_action_active: bool = False   # flag that indicates that a tool has previously been used on an object by clicking and that the tool is still active
         self.active_tool: str = ""              # name of the tool that is still active
@@ -48,18 +56,6 @@ class RenderFrame(ttk.Frame):
         self.render_canvas.bind("<MouseWheel>", self.canvas_mouse_scroll)
         self.render_canvas.grid(row=0, column=0, sticky="NSEW")
 
-        # mouse-tracking testoval
-        #self.ovrx = 25
-        #self.ovry = 25
-        #self.testvector: Vector2D = Vector2D(50, 50)
-        #self.testoval = self.render_canvas.create_oval(
-        #    self.testvector.x - self.ovrx,
-        #    self.testvector.y - self.ovry,
-        #    self.testvector.x + self.ovrx,
-        #    self.testvector.y + self.ovry)
-        #self.testarrow = self.render_canvas.create_line(
-        #    0, 0, self.ovrx, self.ovry, arrow=tk.LAST)
-        #self.moveactive: bool = False
 
     def canvas_mouse_move(self, event):
         if self.render_offset_move_active:
@@ -71,18 +67,6 @@ class RenderFrame(ttk.Frame):
         if self.tool_action_active:
             if self.active_tool == "move":
                 self.influenced_object.pos.cart = self.render2simcords(event.x, event.y)
-        # for testoval
-        #if (self.moveactive):
-        #    # save mouse values to vector
-        #    self.testvector.cart = (event.x, event.y)
-#
-        #    # move to vector
-        #    self.render_canvas.moveto(
-        #        self.testoval,
-        #        self.testvector.x - self.ovrx,
-        #        self.testvector.y - self.ovry)
-        #    self.render_canvas.coords(
-        #        self.testarrow, 0, 0, self.testvector.x, self.testvector.y)
 
     def canvas_mouse_b3p(self, event):
         #self.moveactive = not self.moveactive   # toggle for testoval
@@ -119,6 +103,7 @@ class RenderFrame(ttk.Frame):
                 Vector2D.from_cart(self.render2simcords(event.x, event.y))
                 )
             sim_space.objects.append(new_obj)   # add the new object to the simulation
+            events.objects_change.trigger()
             return
 
         
@@ -146,6 +131,7 @@ class RenderFrame(ttk.Frame):
             if clicked_obj.ca_circle_id is not ...:
                 self.render_canvas.delete(clicked_obj.ca_circle_id) # remove from the canvas, otherwise the object would simply freeze and not disappear
             sim_space.objects.remove(clicked_obj)   # delete the object from the simulation and rendering list
+            events.objects_change.trigger()
             return
         
         if config.dyn.tool == "select":
@@ -173,8 +159,44 @@ class RenderFrame(ttk.Frame):
         # add to old offset
         self.render_offset += Vector2D(event.x - oldmousepos_now_render.x, event.y - oldmousepos_now_render.y )
         
-    def render_object(self, obj: SimObject) -> None:
+    def render_objects(self, objs: list[SimObject]) -> None:
+        # make a copy of all shapes currently on the canvas
+        ovals = deepcopy(self.object_ovals)
+        fvectors = deepcopy(self.object_force_vectors)
+        vvectors = deepcopy(self.object_velocity_vectors)
+        for obj in objs:
+            if obj.ca_circle_id is not ...:
+                if not obj.ca_circle_id in ovals:   # if it is the first time it was checked
+                    self.object_ovals.append(obj.ca_circle_id)  # add it to the list of existing shapes
+                else:
+                    ovals.remove(obj.ca_circle_id)  # this shape is still required, so remove it from the temporary oval list
+            # do same thing with f and v vectors
+            if obj.ca_fvector_id is not ...:
+                if not obj.ca_fvector_id in fvectors:
+                    self.object_force_vectors.append(obj.ca_fvector_id)
+                else:
+                    fvectors.remove(obj.ca_fvector_id)
 
+            if obj.ca_vvector_id is not ...:
+                if not obj.ca_vvector_id in vvectors:
+                    self.object_velocity_vectors.append(obj.ca_vvector_id)
+                else:
+                    vvectors.remove(obj.ca_vvector_id)
+            # render the object
+            self._render_object(obj)
+        
+        # any shapes that are left in one of the temporary list don't belong to an existing object anymore. they should be delted
+        for shape in ovals:
+            self.render_canvas.delete(shape)
+            self.object_ovals.remove(shape)
+        for shape in fvectors:
+            self.render_canvas.delete(shape)
+            self.object_force_vectors.remove(shape)
+        for shape in vvectors:
+            self.render_canvas.delete(shape)
+            self.object_velocity_vectors.remove(shape)
+
+    def _render_object(self, obj: SimObject) -> None:
         # get corner positions of objects
         x0, y0 = self.sim2rendercords(obj.pos.x - obj.radius, obj.pos.y - obj.radius)
         x1, y1 = self.sim2rendercords(obj.pos.x + obj.radius, obj.pos.y + obj.radius)
@@ -195,7 +217,7 @@ class RenderFrame(ttk.Frame):
                 x0, y0, x1, y1)
             self.render_canvas.itemconfig(obj.ca_circle_id, fill=fill)
 
-        # show force vector
+        # force vector
         if config.dyn.show_force_vector:#
             # get the values
             fx0, fy0 = self.sim2rendercords(obj.pos.x, obj.pos.y)
@@ -209,6 +231,27 @@ class RenderFrame(ttk.Frame):
                 self.render_canvas.coords(
                     obj.ca_fvector_id,
                     fx0, fy0, fx1, fy1)
+        else:
+            obj.ca_fvector_id = ...
+        
+        # velocity vector
+        if config.dyn.show_velocity_vector:#
+            # get the values
+            vx0, vy0 = self.sim2rendercords(obj.pos.x, obj.pos.y)
+            # apply a scaling factor because velocity is to small to see otherwise
+            scaled_vel: Vector2D = obj.vel * config.const.velocity_vector_display_factor
+            vx1, vy1 = self.sim2rendercords(obj.pos.x + scaled_vel.x, obj.pos.y + scaled_vel.y)
+
+            # render the force vectors as arrow lines
+            if obj.ca_vvector_id is ...:
+                obj.ca_vvector_id = self.render_canvas.create_line(
+                    vx0, vy0, vx1, vy1, arrow=tk.LAST)
+            else:
+                self.render_canvas.coords(
+                    obj.ca_vvector_id,
+                    vx0, vy0, vx1, vy1)
+        else:
+            obj.ca_vvector_id = ...
 
     def sim2rendercords(self, simx, simy) -> tuple[float, float]:
         return (
