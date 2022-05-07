@@ -13,7 +13,7 @@ import classes.events as events
 High_Value=True
 Low_Value=False
 
-class LowerFrame(ttk.Frame): 
+class ObjectPropFrame(ttk.Frame): 
     def __init__(self, master): 
         super().__init__(master)
         self.mass_variable=tk.DoubleVar()

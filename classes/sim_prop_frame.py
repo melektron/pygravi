@@ -13,7 +13,7 @@ import classes.events as events
 High_Value=True
 Low_Value=False
 
-class UpperFrame(ttk.Frame): 
+class SimPropFrame(ttk.Frame): 
     def __init__(self, master): 
         super().__init__(master)
 
