@@ -3,18 +3,16 @@
     "writeprotect": false,
     "keys": {
         "G": 6.6743e-11,
-        "sim_deltat": 1,
+        "sim_deltat": 1.0,
         "visual_framedelay": 10,
         "__sim_framedelay_comment": "sframedelay is in us",
-        "sim_framedelay": 100,
-
-        "do_gravity": true,
-        "do_collision": false,
-        "do_ideal": true,
-
-        "show_force_vector": false,
-        "show_velocity_vector": false,
-
+        "sim_framedelay": 100.0,
+        "do_gravity": 1,
+        "do_collision": 1,
+        "do_ideal": 0,
+        "collision_losses": 0.342,
+        "show_force_vector": 1,
+        "show_velocity_vector": 1,
         "tool": "select"
     }
 }
