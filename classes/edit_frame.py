@@ -17,7 +17,7 @@ from numpy import isin
 
 from pyparsing import col
 import classes.config as config
-from classes.vector import Vector2D
+from classes.object_prop_frame import ObjectPropFrame
 from classes.sim_object import SimObject
 import classes.events as events
 from classes.sim_space import sim_space
@@ -106,6 +106,11 @@ class EditFrame(ttk.Frame):
 
         # get notification when selection is made
         self.object_tree.bind("<<TreeviewSelect>>", self.treeview_select_callback)
+
+
+        # === Object properties
+        self.obeject_prop=ObjectPropFrame(self)
+        self.obeject_prop.grid(row=6, column=0, sticky="WNE")
         
         
         

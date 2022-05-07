@@ -18,8 +18,5 @@ class ConfigFrame(ttk.Frame):
         self.sim_prop.grid(row=0, column=0)
         
 
-        self.lower_=ObjectPropFrame(self)
-        self.rowconfigure(1, weight=1)
-        self.lower_.grid(row=1, column=0, sticky="N")
     
 
