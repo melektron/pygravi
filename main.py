@@ -46,7 +46,8 @@ class Window(tk.Tk):
         # === register global keyboard shortcuts
         self.bind_all("<Control-e>", self.ccb_e, "+")
         self.bind_all("<Control-n>", self.ccb_n, "+")
-        self.bind_all("<Control-Delete>", self.ccb_del, "+")
+        self.bind_all("<Control-BackSpace>", self.ccb_del, "+")
+        self.bind_all("<Delete>", self.ccb_del, "+")    
         self.bind_all("<Control-m>", self.ccb_m, "+")
         self.bind_all("<Control-c>", self.ccb_c, "+")
         self.bind_all("<Control-v>", self.ccb_v, "+")

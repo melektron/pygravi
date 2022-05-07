@@ -315,8 +315,10 @@ class RenderFrame(ttk.Frame):
         x0, y0 = self.sim2rendercords(obj.pos.x - obj.radius, obj.pos.y - obj.radius)
         x1, y1 = self.sim2rendercords(obj.pos.x + obj.radius, obj.pos.y + obj.radius)
         fill = obj.color
+        line = "black"
+        width = 1
         if obj is sim_space.selected_object:
-            fill="lightblue"
+            width=3
         elif not obj.active:
             fill = "lightgray"
         
@@ -324,12 +326,12 @@ class RenderFrame(ttk.Frame):
         # render oval representing the object
         if obj.ca_circle_id is ...:
             # if object has not been drawn jet, create new object
-            obj.ca_circle_id = self.render_canvas.create_oval(x0, y0, x1, y1, fill=fill)
+            obj.ca_circle_id = self.render_canvas.create_oval(x0, y0, x1, y1, fill=fill, outline=line, width=width)
         else:
             self.render_canvas.coords(
                 obj.ca_circle_id,
                 x0, y0, x1, y1)
-            self.render_canvas.itemconfig(obj.ca_circle_id, fill=fill)
+            self.render_canvas.itemconfig(obj.ca_circle_id, fill=fill, outline=line, width=width)
 
         # force vector
         if config.dyn.show_force_vector:#
