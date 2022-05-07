@@ -8,14 +8,9 @@ The GUI frame on the left of the window for adding/remoing/selecting simulation 
 
 """
 
-from mailbox import _singlefileMailbox
 import tkinter as tk
 import tkinter.ttk as ttk
-from turtle import back
-from wsgiref import simple_server
-from numpy import isin
 
-from pyparsing import col
 import classes.config as config
 from classes.object_prop_frame import ObjectPropFrame
 from classes.sim_object import SimObject
@@ -48,6 +43,8 @@ class EditFrame(ttk.Frame):
         self.toolbar_frame.columnconfigure((0, 1, 2, 3), weight=1, uniform="toolbar_buttons")
         self.current_tool_variable = tk.StringVar(value=config.dyn.tool)
         self.current_tool_variable.trace("w", self.tool_change)
+        # catch external tool change events to change selection
+        events.tool_change.subscribe(self.ext_tool_change)
 
         self.tool_button_select = ttk.Radiobutton(self.toolbar_frame, variable=self.current_tool_variable, value="select", text="Select")
         self.tool_button_select.grid(row=0, column=0, sticky="WE", padx=5)
@@ -100,13 +97,19 @@ class EditFrame(ttk.Frame):
         # dict to map treeview id's to actual objects
         self.tree_id_to_obj: dict[str, SimObject] = {}
 
-        # default object to list
+        # add the default object
         self.object_tree_default_object = self.object_tree.insert("", tk.END, id="default", text="Default Object", values=(str(True)), tags=("default"))
         self.configure_colors("default", sim_space.default_object.color)
 
         # get notification when selection is made
         self.object_tree.bind("<<TreeviewSelect>>", self.treeview_select_callback)
+        # clear selection when excape is pressed
+        self.object_tree.bind("<Escape>", self.deselect_callback)
 
+        
+        #space to next section
+        self.place_holder_label=ttk.Label(self)
+        self.place_holder_label.grid(row=5, column=0)
 
         # === Object properties
         self.obeject_prop=ObjectPropFrame(self)
@@ -117,6 +120,16 @@ class EditFrame(ttk.Frame):
         # update object list manualy the first time
         self.update_object_list()
     
+    # catch external tool change events to update toolbar display
+    def ext_tool_change(self, event_data=...):
+        if event_data is self: return
+        self.current_tool_variable.set(config.dyn.tool)
+
+    # trace callback for self.current_tool_variable
+    def tool_change(self, a, b, c):
+        config.dyn.tool = self.current_tool_variable.get()
+        events.tool_change.trigger()
+    
     # method that automatically configures back and foreground of a treeview tag depending on the given background color
     def configure_colors(self, tag_name: str, bgcolor: str):
         # turn color string in a float rgb value (0.0 - 1.0)
@@ -124,10 +137,6 @@ class EditFrame(ttk.Frame):
         # ajust fg for bg brightness https://stackoverflow.com/questions/3942878/how-to-decide-font-color-in-white-or-black-depending-on-background-color
         fgcolor = "black" if (red*0.299 + green*0.587 + blue*0.114) > 183 else "white"
         self.object_tree.tag_configure(tag_name, background=bgcolor, foreground=fgcolor)
-
-    # trace callback for self.current_tool_variable
-    def tool_change(self, a, b, c):
-        config.dyn.tool = self.current_tool_variable.get()
     
     # method to update object list with current objects (also used as objects_change event callback)
     def update_object_list(self, event_data=...):
@@ -165,6 +174,12 @@ class EditFrame(ttk.Frame):
             # select the item
             self.object_tree.selection_set(selid)
             
+    # deselect callback called when escape key is pressed
+    def deselect_callback(self, event=...):
+        for sel in self.object_tree.selection():
+            self.object_tree.selection_remove(sel)
+        sim_space.selected_object = ...
+        events.selection_change.trigger(self)
 
     def treeview_select_callback(self, event=...):
         if len(self.object_tree.selection()) == 0:

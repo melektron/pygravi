@@ -5,6 +5,7 @@ Author
 from copy import deepcopy
 import tkinter.ttk as ttk
 import tkinter as tk
+from wsgiref import simple_server
 
 from classes.vector import Vector2D
 from classes.sim_object import SimObject
@@ -47,13 +48,14 @@ class RenderFrame(ttk.Frame):
         self.rowconfigure(0, weight=1)
         self.columnconfigure(0, weight=1)
 
-        self.render_canvas = tk.Canvas(self)
+        self.render_canvas = tk.Canvas(self, highlightthickness=0)
         self.render_canvas.bind("<Motion>", self.canvas_mouse_move)
         self.render_canvas.bind("<Button-1>", self.canvas_mouse_b1p)
         self.render_canvas.bind("<ButtonRelease-1>", self.canvas_mouse_b1r)
         self.render_canvas.bind("<Button-3>", self.canvas_mouse_b3p)
         self.render_canvas.bind("<ButtonRelease-3>", self.canvas_mouse_b3r)
         self.render_canvas.bind("<MouseWheel>", self.canvas_mouse_scroll)
+        self.render_canvas.bind("<Escape>", self.canvas_escape)
         self.render_canvas.grid(row=0, column=0, sticky="NSEW")
 
 
@@ -69,16 +71,24 @@ class RenderFrame(ttk.Frame):
                 self.influenced_object.pos.cart = self.render2simcords(event.x, event.y)
 
     def canvas_mouse_b3p(self, event):
-        #self.moveactive = not self.moveactive   # toggle for testoval
+        # === initiate view moving
         self.render_offset_before.cart = self.render_offset.cart
         self.render_offset_init_mouse_pos.cart = (event.x, event.y)
         self.render_offset_move_active = True
+        # set canvas in focus on any mouse actino at the end so other widgets don't steel focus before
+        self.render_canvas.focus_set()
     
     def canvas_mouse_b3r(self, event):
         self.render_offset_move_active = False
+        
+        # set canvas in focus on any mouse actino at the end so other widgets don't steel focus before
+        self.render_canvas.focus_set()
     
     def canvas_mouse_b1p(self, event):
-        pass
+        # somecode
+
+        # set canvas in focus on any mouse actino at the end so other widgets don't steel focus before
+        self.render_canvas.focus_set()
     
     def canvas_mouse_b1r(self, event):
         # === handle active tool actions
@@ -125,8 +135,6 @@ class RenderFrame(ttk.Frame):
             return
         
         if config.dyn.tool == "delete":
-            if clicked_obj.ca_circle_id is not ...:
-                self.render_canvas.delete(clicked_obj.ca_circle_id) # remove from the canvas, otherwise the object would simply freeze and not disappear
             sim_space.objects.remove(clicked_obj)   # delete the object from the simulation and rendering list
             events.objects_change.trigger()
             return
@@ -135,7 +143,9 @@ class RenderFrame(ttk.Frame):
             sim_space.selected_object = clicked_obj
             events.selection_change.trigger()
         
-
+        # set canvas in focus on any mouse actino at the end so other widgets don't steel focus before
+        self.render_canvas.focus_set()
+        
     def canvas_mouse_scroll(self, event):
         # for testoval
         #if not self.moveactive:
@@ -156,6 +166,35 @@ class RenderFrame(ttk.Frame):
         # add to old offset
         self.render_offset += Vector2D(event.x - oldmousepos_now_render.x, event.y - oldmousepos_now_render.y )
         
+    def canvas_escape(self, event):
+        print("canvasescape")
+        # === handle active tool actions
+        # if any tool is active, do the corresponding tool action
+        if self.tool_action_active:
+            if self.active_tool == "move":
+                # abort move
+                self.influenced_object.pos.cart = self.influenced_object_start_position.cart    # place object back in oritginal position
+                self.influenced_object.active = True    # enable the object for simulation
+                self.active_tool = ""
+                self.tool_action_active = False
+                self.influenced_object = ...
+                return
+
+        # === deselect current selection if no tool is active
+        if sim_space.selected_object is not ...:
+            print("desel")
+            sim_space.selected_object = ...
+            events.selection_change.trigger()
+            return
+
+        # === set tool to select if nothing else caught the escape key
+        if config.dyn.tool != "select":
+            config.dyn.tool = "select"
+            events.tool_change.trigger()
+            return
+        
+        
+
     def render_objects(self, objs: list[SimObject]) -> None:
         # make a copy of all shapes currently on the canvas
         ovals = deepcopy(self.object_ovals)

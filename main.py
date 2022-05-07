@@ -28,6 +28,16 @@ class Window(tk.Tk):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
 
+        # === register global keyboard shortcuts
+        self.bind_all("s", self.ccb_s, "+")
+        self.bind_all("n", self.ccb_n, "+")
+        self.bind_all("r", self.ccb_r, "+")
+        self.bind_all("m", self.ccb_m, "+")
+        self.bind_all("c", self.ccb_c, "+")
+        self.bind_all("v", self.ccb_v, "+")
+        self.bind_all("d", self.ccb_d, "+")
+
+
         self.columnconfigure(1, weight=3)
         #self.columnconfigure(2, weight=0)
         self.rowconfigure(1, weight=1)
@@ -45,6 +55,41 @@ class Window(tk.Tk):
         self.config_frame.grid_propagate(0)  # keep right column fixed size (width)
 
         self.after(config.dyn.visual_framedelay, self.render_objects)
+    
+    def ccb_s(self, event=...):
+        config.dyn.tool = "select"
+        events.tool_change.trigger()
+        pass
+    
+    def ccb_n(self, event=...):
+        config.dyn.tool = "new"
+        events.tool_change.trigger()
+        pass
+    
+    def ccb_r(self, event=...):
+        config.dyn.tool = "delete"
+        events.tool_change.trigger()
+        pass
+    
+    def ccb_m(self, event=...):
+        config.dyn.tool = "move"
+        events.tool_change.trigger()
+        pass
+    
+    def ccb_c(self, event=...):
+        config.dyn.tool = "copy"
+        events.tool_change.trigger()
+        pass
+    
+    def ccb_v(self, event=...):
+        config.dyn.tool = "paste"
+        events.tool_change.trigger()
+        pass
+    
+    def ccb_d(self, event=...):
+        config.dyn.tool = "duplicate"
+        events.tool_change.trigger()
+        pass
 
     def render_objects(self) -> None:
         # Render Start

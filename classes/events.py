@@ -31,3 +31,6 @@ object_prop_change: _Event = _Event()   # an object property was changed, some v
 show_force: _Event = _Event()   # value is True/False for ON/OFF
 show_velocity: _Event = _Event()   # value is True/False for ON/OFF
 
+# tools
+tool_change: _Event = _Event()
+
