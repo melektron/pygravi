@@ -28,6 +28,8 @@ class Window(tk.Tk):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
 
+        self.title("PyPhySim v1.0")
+
         self.columnconfigure(1, weight=3)
         #self.columnconfigure(2, weight=0)
         self.rowconfigure(1, weight=1)
