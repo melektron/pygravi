@@ -38,7 +38,6 @@ class _Confhive:
             self.__dict__[key] = value
         
         self.init_done = True
-        print("init done")
 
     # catch attribute asign events
     def __setattr__(self, config_key: str, value: Any) -> None:

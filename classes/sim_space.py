@@ -87,10 +87,10 @@ class _SimSpace:
         if config.dyn.do_gravity:
             # calculate the force vectors
             for obj in active_objects:
-                if not obj.active: continue
+                if not obj.active or obj.mass == 0: continue
                 obj.force.cart = (0, 0)
                 for obj2 in active_objects:
-                    if not obj2.active: continue
+                    if not obj2.active or obj2.mass == 0: continue
                     obj.force = obj.force + obj.gforce(obj2)
                     #print("Object: ", obj.name, "\tPos: ", obj.pos, "\tOhter: ", obj2.pos, "\tTemp Force: ", obj.force)
 
@@ -110,45 +110,42 @@ class _SimSpace:
                 # if the two are colliding
                 if obj.pos.distance_to(obj2.pos) <= obj.radius + obj2.radius:
                     # for stationary objects, simply invert the part of the moving objects velocity that is in parallel to the collision angle
-                    #if obj.statio:
-                    #    print(f"s: {obj.name}, m: {obj2.name}")
-                    #    # direction vector between objects
-                    #    dir: Vector2D = obj.pos - obj2.pos
-                    #    # angle delta of moving object (obj2) to the collision angle (dir.phi)
-                    #    a = dir.phi - obj2.vel.phi
-                    #    # keep the part of the velocity that is unaffected by the collision (90 degrees to the collision angle)
-                    #    vnew: Vector2D = Vector2D.from_polar((dir.phi-config.const.pi/2, obj2.vel.r*sin(a)))
-                    #    # add the part that was affected by the collision but invert it
-                    #    vnew -= Vector2D.from_polar((dir.phi, obj2.vel.r*cos(a)))
-                    #    # store new velocits
-                    #    obj2.vel = vnew
-                    #elif obj2.statio:
-                    #    print(f"m: {obj.name}, s: {obj2.name}, vel: {obj.vel}")
-                    #    # direction vector between objects
-                    #    dir: Vector2D = obj2.pos - obj.pos
-                    #    # angle delta of moving object (obj) to the collision angle (dir.phi)
-                    #    a = dir.phi - obj.vel.phi
-                    #    # keep the part of the velocity that is unaffected by the collision (90 degrees to the collision angle)
-                    #    vkeep: Vector2D = Vector2D.from_polar((dir.phi-config.const.pi/2, obj.vel.r*sin(a)))
-                    #    print(f"velun: {vkeep}")
-                    #    # add the part that was affected by the collision but invert it
-                    #    vchange: Vector2D = Vector2D.from_polar((dir.phi, obj.vel.r*cos(a)))
-                    #    print(f"velaff: {vchange}")
-                    #    # store new velocits
-                    #    obj.vel = vkeep - vchange
-                    #else:
-
-                    # calculate collision using conservation of momentum and some clever vector magic
-                    # Source of formula and code: https://scipython.com/blog/two-dimensional-collisions/
-                    m1, m2 = obj.mass, obj2.mass
-                    M = m1 + m2
-                    r1, r2 = obj.pos, obj2.pos
-                    d = r1.distance_to(r2)**2
-                    v1, v2 = obj.vel, obj2.vel
-                    u1 = v1 - 2*m2 / M * ((v1-v2) @ (r1-r2)) / d * (r1 - r2)
-                    u2 = v2 - 2*m1 / M * ((v2-v1) @ (r2-r1)) / d * (r2 - r1)
-                    obj.vel = u1
-                    obj2.vel = u2
+                    if obj.statio:
+                        print(f"s: {obj.name}, m: {obj2.name}")
+                        # direction vector between objects
+                        dir: Vector2D = obj.pos - obj2.pos
+                        # angle delta of moving object (obj2) to the collision angle (dir.phi)
+                        a = dir.phi - obj2.vel.phi
+                        # keep the part of the velocity that is unaffected by the collision (90 degrees to the collision angle)
+                        vnew: Vector2D = Vector2D.from_polar((dir.phi-config.const.pi/2, obj2.vel.r*sin(a)))
+                        # add the part that was affected by the collision but invert it
+                        vnew -= Vector2D.from_polar((dir.phi, obj2.vel.r*cos(a)))
+                        # store new velocits
+                        obj2.vel = vnew
+                    elif obj2.statio:
+                        print(f"m: {obj.name}, s: {obj2.name}, vel: {obj.vel}")
+                        # direction vector between objects
+                        dir: Vector2D = obj2.pos - obj.pos
+                        # angle delta of moving object (obj) to the collision angle (dir.phi)
+                        a = dir.phi - obj.vel.phi
+                        # keep the part of the velocity that is unaffected by the collision (90 degrees to the collision angle)
+                        vnew: Vector2D = Vector2D.from_polar((dir.phi-config.const.pi/2, obj.vel.r*sin(a)))
+                        # add the part that was affected by the collision but invert it
+                        vnew -= Vector2D.from_polar((dir.phi, obj.vel.r*cos(a)))
+                        # store new velocits
+                        obj.vel = vnew
+                    else:
+                        # calculate collision using conservation of momentum and some clever vector magic
+                        # Source of formula and code: https://scipython.com/blog/two-dimensional-collisions/
+                        m1, m2 = obj.mass, obj2.mass
+                        M = m1 + m2
+                        r1, r2 = obj.pos, obj2.pos
+                        d = r1.distance_to(r2)**2
+                        v1, v2 = obj.vel, obj2.vel
+                        u1 = v1 - 2*m2 / M * ((v1-v2) @ (r1-r2)) / d * (r1 - r2)
+                        u2 = v2 - 2*m1 / M * ((v2-v1) @ (r2-r1)) / d * (r2 - r1)
+                        obj.vel = u1
+                        obj2.vel = u2
 
                     #print(f"vel a: {obj.vel}, {obj2.vel}")
 

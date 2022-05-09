@@ -27,7 +27,7 @@ class Vector2D:
     
     @classmethod
     def from_polar(cls, values: tuple | list) -> "Vector2D":
-        new = cls(0, 0)
+        new = cls(1, 1)
         new.phi = values[0]
         new.r = values[1]
         return new
