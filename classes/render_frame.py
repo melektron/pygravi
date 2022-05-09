@@ -49,6 +49,7 @@ class RenderFrame(ttk.Frame):
         self.columnconfigure(0, weight=1)
 
         self.render_canvas = tk.Canvas(self, highlightthickness=0)
+        self.mouse_coords_text = self.render_canvas.create_text(10, 10, anchor="nw", text="X: N/A    Y: N/A")
         self.render_canvas.bind("<Motion>", self.canvas_mouse_move)
         self.render_canvas.bind("<Button-1>", self.canvas_mouse_b1p)
         self.render_canvas.bind("<ButtonRelease-1>", self.canvas_mouse_b1r)
@@ -60,6 +61,9 @@ class RenderFrame(ttk.Frame):
 
 
     def canvas_mouse_move(self, event):
+        (x, y) = self.render2simcords(event.x, event.y)
+        self.render_canvas.itemconfig(self.mouse_coords_text, text=f"X: {round(x, 2)}   Y: {round(y, 2)}")
+
         if self.render_offset_move_active:
             self.render_offset.cart = (
                 self.render_offset_before.x + event.x - self.render_offset_init_mouse_pos.x,
