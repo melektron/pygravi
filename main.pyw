@@ -29,6 +29,7 @@ class Window(tk.Tk):
         super().__init__(*args, **kwargs)
 
         self.title("PyPhySim v1.0")
+        self.iconbitmap('zahlen.ico')
 
         self.columnconfigure(1, weight=3)
         #self.columnconfigure(2, weight=0)
