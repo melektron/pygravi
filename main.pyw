@@ -110,8 +110,13 @@ class Window(tk.Tk):
         pass
     
     def ccb_d(self, event=...):
-        config.dyn.tool = "duplicate"
-        events.tool_change.trigger()
+        if self.render_frame.tool_action_active: return     # if an action is active, stop
+        if sim_space.selected_object is not ...:
+            self.render_frame.copy_selection()
+            self.render_frame.initiate_paste()
+        else:
+            config.dyn.tool = "duplicate"
+            events.tool_change.trigger()
         pass
     
 

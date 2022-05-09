@@ -188,6 +188,13 @@ class RenderFrame(ttk.Frame):
             self.render_canvas.focus_set()
             return
         
+        if config.dyn.tool == "duplicate":
+            sim_space.clipboard_object = clicked_obj.copy()
+            self.initiate_paste()
+            # set canvas in focus on any mouse action at the end so other widgets don't steel focus before
+            self.render_canvas.focus_set()
+            return
+        
         
         # set canvas in focus on any mouse action at the end so other widgets don't steel focus before
         self.render_canvas.focus_set()

@@ -64,7 +64,7 @@ class EditFrame(ttk.Frame):
         self.tool_button_paste = ttk.Radiobutton(self.toolbar_frame, variable=self.current_tool_variable, value="paste", text="Paste")
         self.tool_button_paste.grid(row = 1, column=1, sticky="WE", padx=5)
 
-        self.tool_button_dup = ttk.Radiobutton(self.toolbar_frame, variable=self.current_tool_variable, value="dup", text="Duplicate")
+        self.tool_button_dup = ttk.Radiobutton(self.toolbar_frame, variable=self.current_tool_variable, value="duplicate", text="Duplicate")
         self.tool_button_dup.grid(row = 1, column=2, columnspan=2, sticky="WE", padx=5)
 
         #space between object tools and object list 
