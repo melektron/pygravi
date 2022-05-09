@@ -6,7 +6,6 @@ MrFlunter
 import tkinter as tk
 import tkinter.ttk as ttk
 from classes.sim_prop_frame import SimPropFrame
-from classes.object_prop_frame import ObjectPropFrame
 
  
 class ConfigFrame(ttk.Frame): 
