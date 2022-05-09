@@ -111,7 +111,7 @@ class _SimSpace:
                 if obj.pos.distance_to(obj2.pos) <= obj.radius + obj2.radius:
                     # for stationary objects, simply invert the part of the moving objects velocity that is in parallel to the collision angle
                     if obj.statio:
-                        print(f"s: {obj.name}, m: {obj2.name}")
+                        #print(f"s: {obj.name}, m: {obj2.name}")
                         # direction vector between objects
                         dir: Vector2D = obj.pos - obj2.pos
                         # angle delta of moving object (obj2) to the collision angle (dir.phi)
@@ -123,7 +123,7 @@ class _SimSpace:
                         # store new velocits
                         obj2.vel = vnew
                     elif obj2.statio:
-                        print(f"m: {obj.name}, s: {obj2.name}, vel: {obj.vel}")
+                        #print(f"m: {obj.name}, s: {obj2.name}, vel: {obj.vel}")
                         # direction vector between objects
                         dir: Vector2D = obj2.pos - obj.pos
                         # angle delta of moving object (obj) to the collision angle (dir.phi)
