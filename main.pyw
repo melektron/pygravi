@@ -32,7 +32,7 @@ class Window(tk.Tk):
         if platform.system().lower().startswith("windows"):
             self.iconbitmap('resource/pyphysim_logo.ico')
         elif platform.system().lower().startswith("linux"):
-            self.iconbitmap('resource/pyphysim_logo.xbm')
+            self.iconbitmap('@resource/pyphysim_logo.xbm')
 
         self.columnconfigure(1, weight=3)
         #self.columnconfigure(2, weight=0)
