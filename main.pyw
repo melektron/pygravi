@@ -8,7 +8,7 @@ www.elektron.work
 Main file for gravity sim
 """
 
-
+import platform
 import tkinter.ttk as ttk
 import tkinter as tk
 import classes.config as config
@@ -29,7 +29,10 @@ class Window(tk.Tk):
         super().__init__(*args, **kwargs)
 
         self.title("PyPhySim v1.0")
-        self.iconbitmap('resource/pyphysim_logo.ico')
+        if platform.system().lower().startswith("windows"):
+            self.iconbitmap('resource/pyphysim_logo.ico')
+        elif platform.system().lower().startswith("linux"):
+            self.iconbitmap('resource/pyphysim_logo.xbm')
 
         self.columnconfigure(1, weight=3)
         #self.columnconfigure(2, weight=0)
