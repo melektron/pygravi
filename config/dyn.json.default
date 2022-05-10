@@ -13,6 +13,13 @@
         "collision_losses": 0.342,
         "show_force_vector": 1,
         "show_velocity_vector": 1,
-        "tool": "select"
+        "tool": "select",
+        "geometry": {
+            "fullscreen": false,
+            "x": 0,
+            "y": 0,
+            "w": 1600,
+            "h": 800
+        }
     }
 }

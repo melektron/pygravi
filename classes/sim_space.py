@@ -11,7 +11,6 @@ The space that the simulation will take place int
 from math import cos, sin, sqrt
 from typing import TypedDict
 import time
-# import external.GS_timing as acctime    # more accurate timing
 import classes.acctime as acctime
 from traceback import print_exc
 from concurrent.futures import ThreadPoolExecutor as PoolExecutor

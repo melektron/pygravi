@@ -28,6 +28,9 @@ class Window(tk.Tk):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
 
+        # don't allow window config changes to be saved just jet
+        self.wnd_save_config_flag = False
+
         self.title("PyPhySim v1.1dev")
         if platform.system().lower().startswith("windows"):
             self.iconbitmap('resource/pyphysim_logo.ico')
@@ -58,8 +61,20 @@ class Window(tk.Tk):
         self.bind_all("<Control-c>", self.ccb_c, "+")
         self.bind_all("<Control-v>", self.ccb_v, "+")
         self.bind_all("<Control-d>", self.ccb_d, "+")
+        self.bind_all("<F11>", self.ccb_f11, "+")
+
+        # window config change to store the last position and size
+        self.bind("<Configure>", self.wnd_cfg)
 
         self.after(config.dyn.visual_framedelay, self.render_objects)
+
+        # load last geometry from file and configure window in the same way
+        self.geometry(f"{config.dyn.geometry['w']}x{config.dyn.geometry['h']}+{config.dyn.geometry['x']}+{config.dyn.geometry['y']}")
+        self.set_fs(config.dyn.geometry['fullscreen'])
+
+        # save window size and position changes from now on
+        self.wnd_save_config_flag = True
+        
     
     def ccb_s(self, event=...):
         pass
@@ -123,6 +138,25 @@ class Window(tk.Tk):
             events.tool_change.trigger()
         pass
     
+    def ccb_f11(self, event=...):
+        config.dyn.geometry["fullscreen"] = not config.dyn.geometry["fullscreen"]
+        self.set_fs(config.dyn.geometry["fullscreen"])
+
+    def set_fs(self, val: bool):
+        if platform.system().lower().startswith("windows"):
+            self.attributes("-fullscreen", bool(val))
+        elif platform.system().lower().startswith("linux"):
+            self.attributes("-zoomed", bool(val))
+        config.dyn.geometry["fullscreen"] = bool(val)
+    
+    def wnd_cfg(self, event: tk.Event=...):
+        if self.wnd_save_config_flag:
+            if event.widget == self: # only if the values apply to the main window
+                # save the position 
+                config.dyn.geometry["x"] = event.x
+                config.dyn.geometry["y"] = event.x
+                config.dyn.geometry["w"] = event.width
+                config.dyn.geometry["h"] = event.height
 
     def render_objects(self) -> None:
         # Render Start
@@ -139,8 +173,9 @@ if __name__ == "__main__":
     sim_space.load_default_object(config.user.default_object)
     events.objects_change.trigger() # notify about object change
     mywindow = Window()
+    
     #mywindow.state("zoomed")
-    mywindow.geometry("1600x800")
+    #mywindow.geometry("1600x800")
     mywindow.mainloop()
     sim_space.stop_simulation()
 
