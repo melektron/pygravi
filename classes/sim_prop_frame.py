@@ -128,6 +128,10 @@ class SimPropFrame(ttk.Frame):
     #Ideal System Checkbox 
     def checkbox_do_ideal_change(self):
         config.dyn.do_ideal=self.checkbox_ideal_state.get()
+        if config.dyn.do_ideal == True:
+            self.collision_losses_slider.state("disable")
+        else:
+            self.collision_losses_slider.state("enable")
 
     #Force vector Checkbox 
     def checkbox_do_force_vector_change(self):

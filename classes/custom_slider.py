@@ -12,6 +12,7 @@ class CustomSlider(ttk.Frame):
         super().__init__(master) # Master is root 
         self.resolution: int=resolution
         self.variable: tk.DoubleVar=variable
+        self.__state = "enable"
 
         # subscribe to external variable updates if a variable was provided
         if not self.variable is ...:
@@ -121,3 +122,21 @@ class CustomSlider(ttk.Frame):
     def _Variable_change_event(self, a, b, c):
         self.current_value.set(str(self.variable.get()))
         self._Value_Entry_Change()
+    
+    # method to set/get the state externally
+    def state(self, state: str = ""):
+        if state == "":
+            return self.__state
+        elif state == "enable":
+            self.__state = "enable"
+            for child in self.winfo_children():
+                child.state(["!disabled"])
+            for child in self.info_frame.winfo_children():
+                child.state(["!disabled"])
+            
+        elif state == "disable":
+            self.__state = "disable"
+            for child in self.winfo_children():
+                child.state(["disabled"])
+            for child in self.info_frame.winfo_children():
+                child.state(["disabled"])
