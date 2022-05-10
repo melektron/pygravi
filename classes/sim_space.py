@@ -11,7 +11,8 @@ The space that the simulation will take place int
 from math import cos, sin
 from typing import TypedDict
 import time
-import external.GS_timing as acctime    # more accurate timing
+#import external.GS_timing as acctime    # more accurate timing
+import classes.acctime as acctime
 from traceback import print_exc
 from concurrent.futures import ThreadPoolExecutor as PoolExecutor
 import itertools
@@ -73,7 +74,7 @@ class _SimSpace:
             while not self.SIGTERM:
                 if self.running:
                     self.do_sim_frame()
-                    acctime.delayMicroseconds(config.dyn.sim_framedelay)
+                    acctime.usleep(config.dyn.sim_framedelay)
                 else:
                     time.sleep(.1)
         except Exception:
