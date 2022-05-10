@@ -28,7 +28,7 @@ class Window(tk.Tk):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
 
-        self.title("PyPhySim v1.0")
+        self.title("PyPhySim v1.1dev")
         if platform.system().lower().startswith("windows"):
             self.iconbitmap('resource/pyphysim_logo.ico')
         elif platform.system().lower().startswith("linux"):
