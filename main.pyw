@@ -146,7 +146,7 @@ class Window(tk.Tk):
         if platform.system().lower().startswith("windows"):
             self.attributes("-fullscreen", bool(val))
         elif platform.system().lower().startswith("linux"):
-            self.attributes("-zoomed", bool(val))
+            self.attributes("-fullscreen", bool(val))
         config.dyn.geometry["fullscreen"] = bool(val)
     
     def wnd_cfg(self, event: tk.Event=...):
