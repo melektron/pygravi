@@ -4,9 +4,6 @@ Written by melektron (Matteo Reiter) and MrFlunter (Florian Unterpertinger)
 www.elektron.work
 02.05.22 18:44
 
-test
-
-
 Main file for gravity sim
 """
 
