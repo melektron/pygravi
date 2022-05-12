@@ -7,6 +7,16 @@ www.elektron.work
 Main file for gravity sim
 """
 
+# check required modules
+import sys
+try:
+    import requests
+except ImportError:
+    print("PyPhySim requires the 'requests' module to be installed.")
+    print("Install instructions: '<python interpreter command> -m pip install requests'")
+    sys.exit()
+
+
 import platform
 import tkinter.ttk as ttk
 import tkinter as tk
