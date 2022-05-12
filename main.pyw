@@ -52,15 +52,27 @@ class Window(tk.Tk):
         self.config_frame.grid_propagate(0)  # keep right column fixed size (width)
         
         # === register global keyboard shortcuts
-        self.bind_all("<Control-e>", self.ccb_e, "+")
-        self.bind_all("<Control-n>", self.ccb_n, "+")
-        self.bind_all("<Control-BackSpace>", self.ccb_del, "+")
-        self.bind_all("<Delete>", self.ccb_del, "+")    
-        self.bind_all("<Control-m>", self.ccb_m, "+")
-        self.bind_all("<Control-c>", self.ccb_c, "+")
-        self.bind_all("<Control-v>", self.ccb_v, "+")
-        self.bind_all("<Control-d>", self.ccb_d, "+")
-        self.bind_all("<F11>", self.ccb_f11, "+")
+        if config.dyn.platform.startswith("windows") or config.dyn.platform.startswith("linux"):
+            self.bind_all("<Control-e>", self.ccb_e, "+")
+            self.bind_all("<Control-n>", self.ccb_n, "+")
+            self.bind_all("<Control-BackSpace>", self.ccb_del, "+")
+            self.bind_all("<Delete>", self.ccb_del, "+")    
+            self.bind_all("<Control-m>", self.ccb_m, "+")
+            self.bind_all("<Control-c>", self.ccb_c, "+")
+            self.bind_all("<Control-v>", self.ccb_v, "+")
+            self.bind_all("<Control-d>", self.ccb_d, "+")
+            self.bind_all("<F11>", self.ccb_f11, "+")
+        elif config.dyn.platform.startswith("darwin"):
+            self.bind_all("<Control-e>", self.ccb_e, "+")
+            self.bind_all("<Control-n>", self.ccb_n, "+")
+            self.bind_all("<Control-BackSpace>", self.ccb_del, "+")
+            self.bind_all("<Delete>", self.ccb_del, "+")    
+            self.bind_all("<Control-m>", self.ccb_m, "+")
+            self.bind_all("<Control-c>", self.ccb_c, "+")
+            self.bind_all("<Control-v>", self.ccb_v, "+")
+            self.bind_all("<Control-d>", self.ccb_d, "+")
+            self.bind_all("<Command-Control-f>", self.ccb_f11, "+")
+            #self.bind_all("<Command-q>", self.ccb_quit, "+")
 
         # window config change to store the last position and size
         self.bind("<Configure>", self.wnd_cfg)
@@ -140,11 +152,15 @@ class Window(tk.Tk):
     def ccb_f11(self, event=...):
         config.dyn.geometry["fullscreen"] = not config.dyn.geometry["fullscreen"]
         self.set_fs(config.dyn.geometry["fullscreen"])
+    
+    def ccb_quit(self, event=...):
+        sim_space.stop_simulation()
+        sim_space.exec_pool.shutdown(wait=True)
 
     def set_fs(self, val: bool):
-        if config.dyn.platform.startswith("windows"):
+        if config.dyn.platform.startswith("windows") or config.dyn.platform.startswith("linux"):
             self.attributes("-fullscreen", bool(val))
-        elif config.dyn.platform.startswith("linux"):
+        elif config.dyn.platform.startswith("darwin"):
             self.attributes("-fullscreen", bool(val))
         config.dyn.geometry["fullscreen"] = bool(val)
     
