@@ -218,7 +218,7 @@ class RenderFrame(ttk.Frame):
         # change zoom factor
         self.zoom_factor += self.zoom_factor * config.const.zoom_step * event.delta / config.dyn.mouse_scrl_div
         # before it goes to 0, lock it at 0.001
-        if self.zoom_factor < 0.001: self.zoom_factor = 0.001
+        #if self.zoom_factor < 0.001: self.zoom_factor = 0.001
         # get the new render coordinate of the preserved simulation coordinate
         oldmousepos_now_render: Vector2D = Vector2D.from_cart(self.sim2rendercords(mousepos_sim.x, mousepos_sim.y))
         # add to old offset
