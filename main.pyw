@@ -7,13 +7,20 @@ www.elektron.work
 Main file for gravity sim
 """
 
-# check required modules
 import sys
+# check version
+if sys.version_info < (3, 10):
+    print("PyPhySim requires Python 3.10.0 or newer.")
+    print(f"Current version: {sys.version_info.major}.{sys.version_info.minor}.{sys.version_info.micro}")
+    print("To use this software, please use a compatible Python version")
+    sys.exit()
+
+# check required modules
 try:
     import requests
 except ImportError:
     print("PyPhySim requires the 'requests' module to be installed.")
-    print("Install instructions: '<python interpreter command> -m pip install requests'")
+    print("Installation instructions: '<python interpreter> -m pip install requests'")
     sys.exit()
 
 
