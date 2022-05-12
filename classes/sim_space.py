@@ -144,38 +144,64 @@ class _SimSpace:
                         obj.vel = vnew
                     else:
                         # direction vector between objects
-                        dir: Vector2D = obj2.pos - obj.pos
-                        # angle delta of object (obj) to the collision angle (dir.phi)
-                        a = dir.phi - obj.vel.phi
-                        # keep the part of the velocity that is unaffected by the collision (90 degrees to the collision angle)
-                        v_conserved: Vector2D = Vector2D.from_polar((dir.phi-config.const.pi/2, obj.vel.r*sin(a)))
-                        # add the part that was affected by the collision but invert it
-                        v_affected: Vector2D = Vector2D.from_polar((dir.phi, obj.vel.r*cos(a)))
-                        # store new velocits
-                        obj.vel = vnew
-
-
+                        #dir: Vector2D = obj2.pos - obj.pos
+                        ## a = angle delta of object (obj) to the collision angle (dir.phi)
+                        ## v_conserved = part of the velocity that is unaffected by the collision (90 degrees to the collision angle)
+                        ## v_affected = part that will be affected by the collision
+                        ## for obj
+                        #a1 = dir.phi - obj.vel.phi
+                        #v1_conserved: Vector2D = Vector2D.from_polar((dir.phi-config.const.pi/2, obj.vel.r*sin(a1)))
+                        #v1_affected: Vector2D = Vector2D.from_polar((dir.phi, obj.vel.r*cos(a1)))
+                        #v1_affected_l = v1_affected.r
+                        ## for obj2
+                        #a2 = dir.phi - obj2.vel.phi
+                        #v2_conserved: Vector2D = Vector2D.from_polar((dir.phi-config.const.pi/2, obj2.vel.r*sin(a1)))
+                        #v2_affected: Vector2D = Vector2D.from_polar((dir.phi, obj2.vel.r*cos(a1)))
+                        #v2_affected_l = v2_affected.r
+#
+                        ## calculate conservation of momentum and conservatin of energy with a given energy loss if configured
+                        #de: int = 0 # energy loss   ( to be modified by slider)
+#
+                        #v1_affected_final_l = obj.mass**2 * v1_affected_l
+                        #v1_affected_final_l -= sqrt(obj.mass * obj2.mass * (obj.mass * (v1_affected_l**2 * obj2.mass - 2*v1_affected_l*obj2.mass*v2_affected_l + obj2.mass*v2_affected_l**2 - 2*obj2.mass*de) - 2*obj2.mass*de))
+                        #v1_affected_final_l += obj.mass * obj2.mass * v2_affected_l
+                        #v1_affected_final_l /= obj.mass * (obj.mass + obj2.mass)
+#
+                        #v2_affected_final_l = obj2.mass**2 * v2_affected_l
+                        #v2_affected_final_l += sqrt(obj.mass * obj2.mass * (obj.mass * (v1_affected_l**2 * obj2.mass - 2*v1_affected_l*obj2.mass*v2_affected_l + obj2.mass*v2_affected_l**2 - 2*obj2.mass*de) - 2*obj2.mass*de))
+                        #v2_affected_final_l += obj.mass * obj2.mass * v1_affected_l
+                        #v2_affected_final_l /= obj2.mass * (obj.mass + obj2.mass)
+#
+                        ## set the calculated lenght to the affected vector
+                        #v1_affected.r = v1_affected_final_l
+                        #v2_affected.r = v2_affected_final_l
+#
+                        ## add conserved and affected velocities and save them in the objects
+                        #obj.vel = v1_conserved + v1_affected
+                        #obj2.vel = v2_conserved + v2_affected
+#
+#
 
                         # calculate collision using conservation of momentum and some clever vector magic
                         # Source of formula and code: https://scipython.com/blog/two-dimensional-collisions/
-                        #m1, m2 = obj.mass, obj2.mass
-                        #M = m1 + m2
-                        #r1, r2 = obj.pos, obj2.pos
-                        #d = r1.distance_to(r2)**2
-                        #v1, v2 = obj.vel, obj2.vel
-                        #u1 = v1 - 2*m2 / M * ((v1-v2) @ (r1-r2)) / d * (r1 - r2)
-                        #u2 = v2 - 2*m1 / M * ((v2-v1) @ (r2-r1)) / d * (r2 - r1)
-                        #obj.vel = u1
-                        #obj2.vel = u2
+                        m1, m2 = obj.mass, obj2.mass
+                        M = m1 + m2
+                        r1, r2 = obj.pos, obj2.pos
+                        d = r1.distance_to(r2)**2
+                        v1, v2 = obj.vel, obj2.vel
+                        u1 = v1 - 2*m2 / M * ((v1-v2) @ (r1-r2)) / d * (r1 - r2)
+                        u2 = v2 - 2*m1 / M * ((v2-v1) @ (r2-r1)) / d * (r2 - r1)
+                        obj.vel = u1
+                        obj2.vel = u2
 
                         # calculate energy loss if enabled
-                        #if not config.dyn.do_ideal:
-                        #    self.count+=1
-                        #    #print("count", self.count)
-                        #    sqr_r = (((obj.mass * obj.vel.r**2) / 2) - config.dyn.collision_losses) * 2 / obj.mass
-                        #    obj.vel.r = sqrt(sqr_r) if sqr_r > 0 else 0
-                        #    sqr_r = (((obj2.mass * obj2.vel.r**2) / 2) - config.dyn.collision_losses) * 2 / obj2.mass
-                        #    obj2.vel.r = sqrt(sqr_r) if sqr_r > 0 else 0
+                        if not config.dyn.do_ideal:
+                            self.count+=1
+                            #print("count", self.count)
+                            sqr_r = (((obj.mass * obj.vel.r**2) / 2) - config.dyn.collision_losses) * 2 / obj.mass
+                            obj.vel.r = sqrt(sqr_r) if sqr_r > 0 else 0
+                            sqr_r = (((obj2.mass * obj2.vel.r**2) / 2) - config.dyn.collision_losses) * 2 / obj2.mass
+                            obj2.vel.r = sqrt(sqr_r) if sqr_r > 0 else 0
 
                     #print(f"vel a: {obj.vel}, {obj2.vel}")
 
