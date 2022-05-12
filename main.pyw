@@ -31,9 +31,9 @@ class Window(tk.Tk):
         self.wnd_save_config_flag = False
 
         self.title("PyPhySim v1.1dev")
-        if platform.system().lower().startswith("windows"):
+        if config.dyn.platform.startswith("windows"):
             self.iconbitmap('resource/pyphysim_logo.ico')
-        elif platform.system().lower().startswith("linux"):
+        elif config.dyn.platform.startswith("linux"):
             self.iconbitmap('@resource/pyphysim_logo.xbm')
 
         self.columnconfigure(1, weight=3)
@@ -142,9 +142,9 @@ class Window(tk.Tk):
         self.set_fs(config.dyn.geometry["fullscreen"])
 
     def set_fs(self, val: bool):
-        if platform.system().lower().startswith("windows"):
+        if config.dyn.platform.startswith("windows"):
             self.attributes("-fullscreen", bool(val))
-        elif platform.system().lower().startswith("linux"):
+        elif config.dyn.platform.startswith("linux"):
             self.attributes("-fullscreen", bool(val))
         config.dyn.geometry["fullscreen"] = bool(val)
     
@@ -166,6 +166,16 @@ class Window(tk.Tk):
 
 
 if __name__ == "__main__":
+    # load the platform
+    config.dyn.platform = platform.system().lower()
+
+    # load propper mouse scrolling devider
+    if config.dyn.platform.startswith("windows") or config.dyn.platform.startswith("linux"):
+        config.dyn.mouse_scrl_div = 120
+    elif config.dyn.platform.startswith("darwin"):
+        config.dyn.mouse_scrl_div = 18
+
+
     #myobj = classes.planets.Planets.planet_to_object(classes.planets.Planets.request_planet_data("earth")[0])
     #sim_space.append_object(myobj)
     sim_space.load_objects(config.user.objects)

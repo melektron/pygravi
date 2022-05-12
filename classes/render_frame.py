@@ -52,10 +52,18 @@ class RenderFrame(ttk.Frame):
         self.render_canvas = tk.Canvas(self, highlightthickness=0)
         self.mouse_coords_text = self.render_canvas.create_text(10, 10, anchor="nw", text="X: N/A    Y: N/A")
         self.render_canvas.bind("<Motion>", self.canvas_mouse_move)
-        self.render_canvas.bind("<Button-1>", self.canvas_mouse_b1p)
-        self.render_canvas.bind("<ButtonRelease-1>", self.canvas_mouse_b1r)
-        self.render_canvas.bind("<Button-3>", self.canvas_mouse_b3p)
-        self.render_canvas.bind("<ButtonRelease-3>", self.canvas_mouse_b3r)
+        self.render_canvas.bind("<Button-1>", self.canvas_mouse_l_p)
+        self.render_canvas.bind("<ButtonRelease-1>", self.canvas_mouse_l_r)
+
+        # on windows and linux right mouse is button-3
+        if config.dyn.platform.startswith("windows") or config.dyn.platform.startswith("linux"):
+            self.render_canvas.bind("<Button-3>", self.canvas_mouse_r_p)
+            self.render_canvas.bind("<ButtonRelease-3>", self.canvas_mouse_r_r)
+        # on Mac, right mouse is button-2 and middle mouse is button-3
+        elif config.dyn.platform.startswith("darwin"):
+            self.render_canvas.bind("<Button-2>", self.canvas_mouse_r_p)
+            self.render_canvas.bind("<ButtonRelease-2>", self.canvas_mouse_r_r)
+        
         self.render_canvas.bind("<MouseWheel>", self.canvas_mouse_scroll)
         self.render_canvas.bind("<Escape>", self.canvas_escape)
         self.render_canvas.grid(row=0, column=0, sticky="NSEW")
@@ -77,7 +85,7 @@ class RenderFrame(ttk.Frame):
             if self.active_tool == "paste":
                 self.influenced_object.pos.cart = self.render2simcords(event.x, event.y)
 
-    def canvas_mouse_b3p(self, event):
+    def canvas_mouse_r_p(self, event):
         # === initiate view moving
         self.render_offset_before.cart = self.render_offset.cart
         self.render_offset_init_mouse_pos.cart = (event.x, event.y)
@@ -85,19 +93,19 @@ class RenderFrame(ttk.Frame):
         # set canvas in focus on any mouse action at the end so other widgets don't steel focus before
         self.render_canvas.focus_set()
     
-    def canvas_mouse_b3r(self, event):
+    def canvas_mouse_r_r(self, event):
         self.render_offset_move_active = False
         
         # set canvas in focus on any mouse action at the end so other widgets don't steel focus before
         self.render_canvas.focus_set()
     
-    def canvas_mouse_b1p(self, event):
+    def canvas_mouse_l_p(self, event):
         # somecode
 
         # set canvas in focus on any mouse action at the end so other widgets don't steel focus before
         self.render_canvas.focus_set()
     
-    def canvas_mouse_b1r(self, event):
+    def canvas_mouse_l_r(self, event):
         # === handle active tool actions
         # if any tool is active, do the corresponding tool action
         if self.tool_action_active:
@@ -204,21 +212,11 @@ class RenderFrame(ttk.Frame):
         # set canvas in focus on any mouse action at the end so other widgets don't steel focus before
         self.render_canvas.focus_set()
         
-    def canvas_mouse_scroll(self, event):
-        # for testoval
-        #if not self.moveactive:
-        #    self.testvector.phi = self.testvector.phi + (event.delta / 960)
-        #    self.render_canvas.moveto(
-        #        self.testoval,
-        #        self.testvector.x - self.ovrx,
-        #        self.testvector.y - self.ovry)
-        #    self.render_canvas.coords(
-        #        self.testarrow, 0, 0, self.testvector.x, self.testvector.y)
-        
+    def canvas_mouse_scroll(self, event: tk.Event):
         # get mouse position in rendering frame that is to be preserved
         mousepos_sim: Vector2D = Vector2D.from_cart(self.render2simcords(event.x, event.y))
         # change zoom factor
-        self.zoom_factor += self.zoom_factor * config.const.zoom_step * event.delta / 120
+        self.zoom_factor += self.zoom_factor * config.const.zoom_step * event.delta / config.dyn.mouse_scrl_div
         # before it goes to 0, lock it at 0.001
         if self.zoom_factor < 0.001: self.zoom_factor = 0.001
         # get the new render coordinate of the preserved simulation coordinate
