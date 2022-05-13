@@ -97,6 +97,7 @@ class SimPropFrame(ttk.Frame):
 
         self.reset_button=ttk.Button(self.start_frame, text="RESET")
         self.reset_button.grid(row=0, column=2, sticky="WE", padx=10, ipady=5)
+        self.reset_button.state(["disabled"])
 
 
 

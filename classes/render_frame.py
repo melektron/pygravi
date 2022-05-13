@@ -280,7 +280,6 @@ class RenderFrame(ttk.Frame):
         self.influenced_object.active = False
         self.influenced_object.vel.cart = (0, 0)
         sim_space.objects.append(self.influenced_object)   # add the new object to the simulation
-        print("ctrlv")
     
     def initiate_move(self, obj: SimObject):
         if self.tool_action_active: return  # don't override existing action
