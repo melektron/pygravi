@@ -220,7 +220,7 @@ class RenderFrame(ttk.Frame):
         self.render_canvas.focus_set()
         
     def canvas_mouse_scroll(self, event: tk.Event):
-        # on linux, the delta is 0 and the directino has to be retrieved by whether the event was caused by
+        # on linux, the delta is 0 and the direction has to be retrieved by whether the event was caused by
         # <Button-4> or <Button-5>. Here we just manually set the delta to make comatible with code below
         if config.dyn.platform.startswith("linux"):
             if event.num == 4: event.delta = 120
@@ -336,8 +336,8 @@ class RenderFrame(ttk.Frame):
         line = "black"
         width = 1
         if obj is sim_space.selected_object:
-            width=3
-        elif not obj.active:
+            width = 3
+        if not obj.active:
             fill = "lightgray"
         
 
