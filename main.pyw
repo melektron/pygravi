@@ -78,6 +78,7 @@ class Window(tk.Tk):
             self.bind_all("<Control-c>", self.ccb_c, "+")
             self.bind_all("<Control-v>", self.ccb_v, "+")
             self.bind_all("<Control-d>", self.ccb_d, "+")
+            self.bind_all("<Control-p>", self.ccb_p, "+")
             self.bind_all("<F11>", self.ccb_f11, "+")
         elif config.dyn.platform.startswith("darwin"):
             self.bind_all("<Control-e>", self.ccb_e, "+")
@@ -88,6 +89,7 @@ class Window(tk.Tk):
             self.bind_all("<Control-c>", self.ccb_c, "+")
             self.bind_all("<Control-v>", self.ccb_v, "+")
             self.bind_all("<Control-d>", self.ccb_d, "+")
+            self.bind_all("<Control-p>", self.ccb_p, "+")
             self.bind_all("<Command-Control-f>", self.ccb_f11, "+")
             #self.bind_all("<Command-q>", self.ccb_quit, "+")
 
@@ -165,6 +167,11 @@ class Window(tk.Tk):
             config.dyn.tool = "duplicate"
             events.tool_change.trigger()
         pass
+
+    def ccb_p(self, event=...):
+        if self.render_frame.tool_action_active: return     # if an action is active, stop
+        config.dyn.tool = "planet"
+        events.tool_change.trigger()
     
     def ccb_f11(self, event=...):
         config.dyn.geometry["fullscreen"] = not config.dyn.geometry["fullscreen"]
@@ -199,6 +206,14 @@ class Window(tk.Tk):
 
 
 if __name__ == "__main__":
+    #myobj = classes.planets.Planets.planet_to_object(classes.planets.Planets.request_planet_data("earth")[0])
+    #print(myobj)
+
+    #sim_space.append_object(myobj)
+
+    #sys.exit()
+
+
     # load the platform
     config.dyn.platform = platform.system().lower()
 
@@ -209,8 +224,6 @@ if __name__ == "__main__":
         config.dyn.mouse_scrl_div = 18
 
 
-    #myobj = classes.planets.Planets.planet_to_object(classes.planets.Planets.request_planet_data("earth")[0])
-    #sim_space.append_object(myobj)
     sim_space.load_objects(config.user.objects)
     sim_space.load_default_object(config.user.default_object)
     events.objects_change.trigger() # notify about object change

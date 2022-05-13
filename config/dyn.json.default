@@ -22,6 +22,7 @@
             "h": 800
         },
         "mouse_scrl_div": 120,
-        "platform": ""
+        "platform": "",
+        "planet": ""
     }
 }

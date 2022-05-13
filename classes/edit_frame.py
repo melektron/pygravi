@@ -67,6 +67,14 @@ class EditFrame(ttk.Frame):
         self.tool_button_dup = ttk.Radiobutton(self.toolbar_frame, variable=self.current_tool_variable, value="duplicate", text="Duplicate")
         self.tool_button_dup.grid(row = 1, column=2, columnspan=2, sticky="WE", padx=5)
 
+        self.tool_paste_planet = ttk.Radiobutton(self.toolbar_frame, variable=self.current_tool_variable, value="planet", text="Paste Planet:")
+        self.tool_paste_planet.grid(row = 2, column=0, columnspan=2, sticky="WE", padx=5)
+
+        self.planet_entry_variable = tk.StringVar()
+        self.planet_entry = ttk.Entry(self.toolbar_frame, textvariable=self.planet_entry_variable)
+        self.planet_entry.grid(row=2, column=2, columnspan=2, sticky="WE")
+        self.planet_entry_variable.trace("w", self.planet_change)
+
         #space between object tools and object list 
         self.place_holder_label=ttk.Label(self)
         self.place_holder_label.grid(row=2, column=0)
@@ -130,6 +138,10 @@ class EditFrame(ttk.Frame):
         config.dyn.tool = self.current_tool_variable.get()
         events.tool_change.trigger()
     
+    # trace callback for self.planet_entr_variable
+    def planet_change(self, a, b, c):
+        config.dyn.planet = self.planet_entry_variable.get()
+
     # method that automatically configures back and foreground of a treeview tag depending on the given background color
     def configure_colors(self, tag_name: str, bgcolor: str):
         # turn color string in a float rgb value (0.0 - 1.0)

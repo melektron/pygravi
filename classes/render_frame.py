@@ -12,6 +12,7 @@ from classes.sim_object import SimObject
 from classes.sim_space import sim_space
 import classes.events as events
 import classes.config as config
+from classes.planets import Planets
 
 
 class RenderFrame(ttk.Frame):
@@ -161,6 +162,16 @@ class RenderFrame(ttk.Frame):
             sim_space.objects.append(new_obj)   # add the new object to the simulation
             events.objects_change.trigger()
             # set canvas in focus on any mouse actino at the end so other widgets don't steel focus before
+            self.render_canvas.focus_set()
+            return
+        
+        if config.dyn.tool == "planet":
+            # create a new object from the default values
+            new_obj = Planets.get_scaled_planet(config.dyn.planet)
+            new_obj.pos.cart = self.render2simcords(event.x, event.y)
+            sim_space.objects.append(new_obj)   # add the new object to the simulation
+            events.objects_change.trigger()
+            # set canvas in focus on any mouse action at the end so other widgets don't steel focus before
             self.render_canvas.focus_set()
             return
 

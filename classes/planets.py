@@ -35,6 +35,15 @@ class Planets:
     def planet_to_object(planet: dict) -> SimObject:
         return SimObject(
             planet["englishName"], 
-            50, #planet["meanRadius"] * 1000,  # km to m
-            planet["mass"]["massValue"] * pow(10, planet["mass"]["massExponent"])
+            planet["meanRadius"] * 1000,  # km to m
+            planet["mass"]["massValue"] * pow(10, planet["mass"]["massExponent"]),
+            color="#ff0000"
             )
+    
+    @staticmethod
+    def get_scaled_planet(name: str) -> SimObject:
+        planet: SimObject = Planets.planet_to_object(Planets.request_planet_data(name)[0])
+        planet.radius /= 1e6
+        planet.mass /= 1e17
+        #print(planet)
+        return planet

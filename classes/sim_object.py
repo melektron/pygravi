@@ -93,3 +93,6 @@ class SimObject:
             self.statio,
             self.color
         )
+    
+    def __repr__(self) -> str:
+        return f'"{self.name}": \n\tradius={self.radius},\n\tmass={self.mass},\n\tpos={self.pos},\n\tvel={self.vel},\n\tforce={self.force},\n\t{"active" if self.active else "disabled"}{",stationary" if self.statio else ""},\n\tcolor={self.color}'
