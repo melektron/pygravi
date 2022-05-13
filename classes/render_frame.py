@@ -55,16 +55,23 @@ class RenderFrame(ttk.Frame):
         self.render_canvas.bind("<Button-1>", self.canvas_mouse_l_p)
         self.render_canvas.bind("<ButtonRelease-1>", self.canvas_mouse_l_r)
 
-        # on windows and linux right mouse is button-3
+        # on Windows and Linux right mouse is <Button-3>
         if config.dyn.platform.startswith("windows") or config.dyn.platform.startswith("linux"):
             self.render_canvas.bind("<Button-3>", self.canvas_mouse_r_p)
             self.render_canvas.bind("<ButtonRelease-3>", self.canvas_mouse_r_r)
-        # on Mac, right mouse is button-2 and middle mouse is button-3
+        # on Mac, right mouse is <Button-2> and middle mouse is <Button-3>
         elif config.dyn.platform.startswith("darwin"):
             self.render_canvas.bind("<Button-2>", self.canvas_mouse_r_p)
             self.render_canvas.bind("<ButtonRelease-2>", self.canvas_mouse_r_r)
         
-        self.render_canvas.bind("<MouseWheel>", self.canvas_mouse_scroll)
+        # on Mac and Windows, <MouseWheel> is the mouse wheel event
+        if config.dyn.platform.startswith("windows") or config.dyn.platform.startswith("darwin"):
+            self.render_canvas.bind("<MouseWheel>", self.canvas_mouse_scroll)
+        # on Linux (X11), <Button-4> and <Button-5> are the mouse wheel up and down events
+        elif config.dyn.platform.startswith("linux"):
+            self.render_canvas.bind("<Button-4>", self.canvas_mouse_scroll)
+            self.render_canvas.bind("<Button-5>", self.canvas_mouse_scroll)
+        
         self.render_canvas.bind("<Escape>", self.canvas_escape)
         self.render_canvas.grid(row=0, column=0, sticky="NSEW")
 
@@ -213,12 +220,16 @@ class RenderFrame(ttk.Frame):
         self.render_canvas.focus_set()
         
     def canvas_mouse_scroll(self, event: tk.Event):
+        # on linux, the delta is 0 and the directino has to be retrieved by whether the event was caused by
+        # <Button-4> or <Button-5>. Here we just manually set the delta to make comatible with code below
+        if config.dyn.platform.startswith("linux"):
+            if event.num == 4: event.delta = 120
+            elif event.num == 5: event.delta = -120
+        
         # get mouse position in rendering frame that is to be preserved
         mousepos_sim: Vector2D = Vector2D.from_cart(self.render2simcords(event.x, event.y))
         # change zoom factor
         self.zoom_factor += self.zoom_factor * config.const.zoom_step * event.delta / config.dyn.mouse_scrl_div
-        # before it goes to 0, lock it at 0.001
-        #if self.zoom_factor < 0.001: self.zoom_factor = 0.001
         # get the new render coordinate of the preserved simulation coordinate
         oldmousepos_now_render: Vector2D = Vector2D.from_cart(self.sim2rendercords(mousepos_sim.x, mousepos_sim.y))
         # add to old offset
