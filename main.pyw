@@ -10,7 +10,7 @@ Main file for gravity sim
 import sys
 # check version
 if sys.version_info < (3, 10):
-    print("PyPhySim requires Python 3.10.0 or newer.")
+    print("PyGravi requires Python 3.10.0 or newer.")
     print(f"Current version: {sys.version_info.major}.{sys.version_info.minor}.{sys.version_info.micro}")
     print("To use this software, please use a compatible Python version")
     sys.exit()
@@ -19,7 +19,7 @@ if sys.version_info < (3, 10):
 try:
     import requests
 except ImportError:
-    print("PyPhySim requires the 'requests' module to be installed.")
+    print("PyGravi requires the 'requests' module to be installed.")
     print("Installation instructions: '<python interpreter> -m pip install requests'")
     sys.exit()
 
@@ -47,11 +47,11 @@ class Window(tk.Tk):
         # don't allow window config changes to be saved just jet
         self.wnd_save_config_flag = False
 
-        self.title("PyPhySim v1.1")
+        self.title("PyGravi v1.1")
         if config.dyn.platform.startswith("windows"):
-            self.iconbitmap('resource/pyphysim_logo.ico')
+            self.iconbitmap('resource/pygravi_logo.ico')
         elif config.dyn.platform.startswith("linux"):
-            self.iconbitmap('@resource/pyphysim_logo.xbm')
+            self.iconbitmap('@resource/pygravi_logo.xbm')
 
         self.columnconfigure(1, weight=3)
         #self.columnconfigure(2, weight=0)
