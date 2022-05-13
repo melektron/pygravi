@@ -47,7 +47,7 @@ class Window(tk.Tk):
         # don't allow window config changes to be saved just jet
         self.wnd_save_config_flag = False
 
-        self.title("PyPhySim v1.1dev")
+        self.title("PyPhySim v1.1")
         if config.dyn.platform.startswith("windows"):
             self.iconbitmap('resource/pyphysim_logo.ico')
         elif config.dyn.platform.startswith("linux"):
